@@ -1,0 +1,10 @@
+[
+    {
+        "Path": "README.md",
+        "PreviousPath": "/dev/null",
+        "Added": true,
+        "Renamed": false,
+        "Deleted": false,
+        "Patch": "@@ -0,0 +1,2 @@\n+# testme\r\n+a repo for tencentgit client integration test\n\\ No newline at end of file\n"
+    }
+]

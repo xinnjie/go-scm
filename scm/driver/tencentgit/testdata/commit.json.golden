@@ -1,0 +1,19 @@
+{
+  "Sha": "6269835cafdd89e6d8b8d4a4e3738c79206c1d06",
+  "Message": "推送新内容",
+  "Author": {
+    "Name": "git_user1",
+    "Email": "git_user1@tencent.com",
+    "Date": "2012-06-07T07:38:33-00:00",
+    "Login": "git_user1",
+    "Avatar": ""
+  },
+  "Committer": {
+    "Name": "git_user1",
+    "Email": "git_user1@tencent.com",
+    "Date": "2012-06-07T07:38:33-00:00",
+    "Login": "git_user1",
+    "Avatar": ""
+  },
+  "Link": "https://git.code.tencent.com/xinnjie/testme/commit/6269835cafdd89e6d8b8d4a4e3738c79206c1d06"
+}
