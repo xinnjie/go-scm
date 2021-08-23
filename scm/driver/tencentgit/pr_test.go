@@ -123,7 +123,7 @@ func TestPullList(t *testing.T) {
 
 func TestPullListChanges(t *testing.T) {
 	gock.New("https://git.code.tencent.com").
-		Get("/api/v3/projects/xinnjie/testme/merge_requests/1347/changes").
+		Get("/api/v3/projects/xinnjie/testme/merge_requests/339869/changes").
 		Reply(200).
 		Type("application/json").
 		SetHeaders(mockHeaders).
@@ -131,7 +131,7 @@ func TestPullListChanges(t *testing.T) {
 		File("testdata/merge_diff.json")
 
 	client := NewDefault()
-	got, res, err := client.PullRequests.ListChanges(context.Background(), "xinnjie/testme", 1347, scm.ListOptions{Page: 1, Size: 30})
+	got, _, err := client.PullRequests.ListChanges(context.Background(), "xinnjie/testme", 339869, scm.ListOptions{Page: 1, Size: 30})
 	if err != nil {
 		t.Error(err)
 		return
@@ -146,28 +146,23 @@ func TestPullListChanges(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestPullMerge(t *testing.T) {
 	defer gock.Off()
 
 	gock.New("https://git.code.tencent.com").
-		Put("/api/v3/projects/xinnjie/testme/merge_requests/1347/merge").
+		Put("/api/v3/projects/xinnjie/testme/merge_requests/339869/merge").
 		Reply(200).
 		Type("application/json").
 		SetHeaders(mockHeaders)
 
 	client := NewDefault()
-	res, err := client.PullRequests.Merge(context.Background(), "xinnjie/testme", 1347, nil)
+	_, err := client.PullRequests.Merge(context.Background(), "xinnjie/testme", 339869, nil)
 	if err != nil {
 		t.Error(err)
 		return
 	}
-
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestPullClose(t *testing.T) {

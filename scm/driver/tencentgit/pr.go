@@ -60,7 +60,8 @@ func (s *pullService) List(ctx context.Context, repo string, opts scm.PullReques
 }
 
 func (s *pullService) ListChanges(ctx context.Context, repo string, number int, opts scm.ListOptions) ([]*scm.Change, *scm.Response, error) {
-	path := fmt.Sprintf("api/v3/projects/%s/merge_requests/%d/changes?%s", encode(repo), number, encodeListOptions(opts))
+	// tencentgit list changes do not support pagination
+	path := fmt.Sprintf("api/v3/projects/%s/merge_requests/%d/changes", encode(repo), number)
 	out := new(changes)
 	res, err := s.client.do(ctx, "GET", path, nil, &out)
 	return convertChangeList(out.Changes), res, err
@@ -131,6 +132,9 @@ func (s *pullService) EditComment(ctx context.Context, repo string, number int, 
 func (s *pullService) Merge(ctx context.Context, repo string, number int, options *scm.PullRequestMergeOptions) (*scm.Response, error) {
 	path := fmt.Sprintf("api/v3/projects/%s/merge_requests/%d/merge", encode(repo), number)
 	res, err := s.client.do(ctx, "PUT", path, encodePullRequestMergeOptions(options), nil)
+	// tencentgit do not support DeleteSourceBranch, MergeWhenPipelineSucceeds
+	// TODO(xinnjie) support DeleteSourceBranch manually
+	// TODO(xinnjie) support MergeWhenPipelineSucceeds manually
 	return res, err
 }
 
@@ -319,7 +323,7 @@ type pr struct {
 }
 
 type changes struct {
-	Changes []*change
+	Changes []*change `json:"files"`
 }
 
 type change struct {
@@ -339,12 +343,8 @@ type prInput struct {
 }
 
 type pullRequestMergeRequest struct {
-	CommitMessage             string `json:"merge_commit_message,omitempty"`
-	SquashCommitMessage       string `json:"squash_commit_message,omitempty"`
-	Squash                    string `json:"squash,omitempty"`
-	RemoveSourceBranch        string `json:"should_remove_source_branch,omitempty"`
-	SHA                       string `json:"sha,omitempty"`
-	MergeWhenPipelineSucceeds string `json:"merge_when_pipeline_succeeds,omitempty"`
+	MergeCommitMessage string `json:"merge_commit_message,omitempty"` // merge/squash/rebase
+	MergeCommitType    string `json:"merge_type,omitempty"`
 }
 
 func (s *pullService) convertPullRequestList(ctx context.Context, repo string, from []*pr) ([]*scm.PullRequest, *scm.Response, error) {

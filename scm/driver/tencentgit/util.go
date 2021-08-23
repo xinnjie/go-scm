@@ -130,31 +130,12 @@ func encodePullRequestListOptions(opts scm.PullRequestListOptions) string {
 }
 
 func encodePullRequestMergeOptions(opts *scm.PullRequestMergeOptions) *pullRequestMergeRequest {
-	var prRequest *pullRequestMergeRequest
-	if opts != nil {
-		prRequest = &pullRequestMergeRequest{}
-		if opts.SHA != "" {
-			prRequest.SHA = opts.SHA
-		}
-		switch opts.MergeMethod {
-		case "squash":
-			if opts.CommitTitle != "" {
-				prRequest.SquashCommitMessage = opts.CommitTitle
-			}
-			prRequest.Squash = "true"
-		default:
-			if opts.CommitTitle != "" {
-				prRequest.CommitMessage = opts.CommitTitle
-			}
-		}
-		if opts.MergeWhenPipelineSucceeds {
-			prRequest.MergeWhenPipelineSucceeds = "true"
-		}
-		if opts.DeleteSourceBranch {
-			prRequest.RemoveSourceBranch = "true"
-		}
-
+	prRequest := &pullRequestMergeRequest{}
+	if opts == nil {
+		return prRequest
 	}
+	prRequest.MergeCommitType = opts.MergeMethod
+	prRequest.MergeCommitMessage = opts.CommitTitle
 	return prRequest
 }
 
