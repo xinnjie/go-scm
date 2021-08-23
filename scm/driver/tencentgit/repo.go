@@ -38,9 +38,10 @@ type repository struct {
 	Visibility    string      `json:"visibility"`
 	WebURL        string      `json:"web_url"`
 	SSHURL        string      `json:"ssh_url_to_repo"`
-	HTTPURL       string      `json:"http_url_to_repo"`
+	HTTPSURL      string      `json:"https_url_to_repo"`
 	Namespace     namespace   `json:"namespace"`
-	Permissions   permissions `json:"permissions"`
+	Permissions   permissions `json:"permissions"` // TODO(xinnjie) seems that do not have this field
+	CreatedAt     Time        `json:"created_at"`
 }
 
 type namespace struct {
@@ -491,7 +492,7 @@ func convertRepository(from *repository) *scm.Repository {
 		FullName:  from.PathNamespace,
 		Branch:    from.DefaultBranch,
 		Private:   convertPrivate(from.Visibility),
-		Clone:     from.HTTPURL,
+		Clone:     from.HTTPSURL,
 		CloneSSH:  from.SSHURL,
 		Link:      from.WebURL,
 		Perm: &scm.Perm{
@@ -499,6 +500,7 @@ func convertRepository(from *repository) *scm.Repository {
 			Push:  canPush(from),
 			Admin: canAdmin(from),
 		},
+		Created: from.CreatedAt.Time,
 	}
 	if to.Namespace == "" {
 		if parts := strings.SplitN(from.PathNamespace, "/", 2); len(parts) == 2 {

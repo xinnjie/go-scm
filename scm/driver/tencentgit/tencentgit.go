@@ -38,16 +38,16 @@ func New(uri string) (*scm.Client, error) {
 	client.BaseURL = base
 	// initialize services
 	client.Driver = scm.DriverTencentgit
-	//client.Contents = &contentService{client}
+	client.Contents = &contentService{client}
 	client.Git = &gitService{client}
-	//client.Issues = &issueService{client}
-	//client.Releases = &releaseService{client}
-	//client.Milestones = &milestoneService{client}
-	//client.Organizations = &organizationService{client}
-	//client.PullRequests = &pullService{client}
-	//client.Repositories = &repositoryService{client}
-	//client.Reviews = &reviewService{client}
-	//client.Commits = &commitService{client}
+	client.Issues = &issueService{client}
+	client.Releases = &releaseService{client}
+	client.Milestones = &milestoneService{client}
+	client.Organizations = &organizationService{client}
+	client.PullRequests = &pullService{client}
+	client.Repositories = &repositoryService{client}
+	client.Reviews = &reviewService{client}
+	client.Commits = &commitService{client}
 	//
 	////add the user service to the webhook service so it can be used for fetching users
 	//us := &userService{client}

@@ -11,7 +11,6 @@ import (
 	"strings"
 
 	"github.com/jenkins-x/go-scm/scm"
-	"github.com/jenkins-x/go-scm/scm/driver/internal/null"
 )
 
 type userService struct {
@@ -85,20 +84,20 @@ func (s *userService) AcceptInvitation(context.Context, int64) (*scm.Response, e
 }
 
 type user struct {
-	ID       int         `json:"id"`
-	Username string      `json:"username"`
-	Name     string      `json:"name"`
-	Email    null.String `json:"email"`
-	Avatar   string      `json:"avatar_url"`
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+	Name     string `json:"name"`
+	WebUrl   string `json:"web_url"`
+	Avatar   string `json:"avatar_url"`
 }
 
 func convertUser(from *user) *scm.User {
 	return &scm.User{
 		ID:     from.ID,
 		Avatar: from.Avatar,
-		Email:  from.Email.String,
-		Login:  from.Username,
-		Name:   from.Name,
+		//Email:  from.Email.String, // TODO(xinnjie) query email for user
+		Login: from.Username,
+		Name:  from.Name,
 	}
 }
 

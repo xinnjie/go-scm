@@ -8,8 +8,8 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"path"
 	"strconv"
-	"time"
 
 	"github.com/mitchellh/copystructure"
 
@@ -21,13 +21,13 @@ type pullService struct {
 }
 
 func (s *pullService) Find(ctx context.Context, repo string, number int) (*scm.PullRequest, *scm.Response, error) {
-	path := fmt.Sprintf("api/v3/projects/%s/merge_requests/%d", encode(repo), number)
+	path := fmt.Sprintf("api/v3/projects/%s/merge_request/iid/%d", encode(repo), number)
 	out := new(pr)
 	res, err := s.client.do(ctx, "GET", path, nil, out)
 	if err != nil {
 		return nil, res, err
 	}
-	convRepo, convRes, err := s.convertPullRequest(ctx, out)
+	convRepo, convRes, err := s.convertPullRequest(ctx, repo, out)
 	if err != nil {
 		return nil, convRes, err
 	}
@@ -42,13 +42,17 @@ func (s *pullService) FindComment(ctx context.Context, repo string, index, id in
 }
 
 func (s *pullService) List(ctx context.Context, repo string, opts scm.PullRequestListOptions) ([]*scm.PullRequest, *scm.Response, error) {
+	// label not supported refer to  https://git.woa.com/help/menu/api/merge_requests.html#获取合并请求列表
+	if len(opts.Labels) != 0 {
+		return nil, nil, scm.ErrNotSupported
+	}
 	path := fmt.Sprintf("api/v3/projects/%s/merge_requests?%s", encode(repo), encodePullRequestListOptions(opts))
 	out := []*pr{}
 	res, err := s.client.do(ctx, "GET", path, nil, &out)
 	if err != nil {
 		return nil, res, err
 	}
-	convRepos, convRes, err := s.convertPullRequestList(ctx, out)
+	convRepos, convRes, err := s.convertPullRequestList(ctx, repo, out)
 	if err != nil {
 		return nil, convRes, err
 	}
@@ -223,7 +227,7 @@ func (s *pullService) Create(ctx context.Context, repo string, input *scm.PullRe
 	if err != nil {
 		return nil, res, err
 	}
-	convRepo, convRes, err := s.convertPullRequest(ctx, out)
+	convRepo, convRes, err := s.convertPullRequest(ctx, repo, out)
 	if err != nil {
 		return nil, convRes, err
 	}
@@ -284,7 +288,7 @@ func (s *pullService) updateMergeRequestField(ctx context.Context, repo string, 
 	if err != nil {
 		return nil, res, err
 	}
-	convRepo, convRes, err := s.convertPullRequest(ctx, out)
+	convRepo, convRes, err := s.convertPullRequest(ctx, repo, out)
 	if err != nil {
 		return nil, convRes, err
 	}
@@ -293,28 +297,25 @@ func (s *pullService) updateMergeRequestField(ctx context.Context, repo string, 
 
 type pr struct {
 	Number          int       `json:"iid"`
-	Sha             string    `json:"sha"`
+	Sha             string    `json:"merge_commit_sha"`
 	Title           string    `json:"title"`
 	Desc            string    `json:"description"`
 	State           string    `json:"state"`
 	SourceProjectID int       `json:"source_project_id"`
 	TargetProjectID int       `json:"target_project_id"`
 	Labels          []*string `json:"labels"`
-	Link            string    `json:"web_url"`
 	WIP             bool      `json:"work_in_progress"`
 	Author          user      `json:"author"`
 	MergeStatus     string    `json:"merge_status"`
 	SourceBranch    string    `json:"source_branch"`
 	TargetBranch    string    `json:"target_branch"`
-	Created         time.Time `json:"created_at"`
-	Updated         time.Time `json:"updated_at"`
-	Closed          time.Time
-	DiffRefs        struct {
-		BaseSHA string `json:"base_sha"`
-		HeadSHA string `json:"head_sha"`
-	} `json:"diff_refs"`
-	Assignee  *user   `json:"assignee"`
-	Assignees []*user `json:"assignees"`
+	Created         Time      `json:"created_at"`
+	Updated         Time      `json:"updated_at"`
+	Closed          Time
+	BaseSHA         string  `json:"base_commit"`
+	HeadSHA         string  `json:"source_commit"`
+	Assignee        *user   `json:"assignee"`
+	Assignees       []*user `json:"assignees"`
 }
 
 type changes struct {
@@ -346,10 +347,10 @@ type pullRequestMergeRequest struct {
 	MergeWhenPipelineSucceeds string `json:"merge_when_pipeline_succeeds,omitempty"`
 }
 
-func (s *pullService) convertPullRequestList(ctx context.Context, from []*pr) ([]*scm.PullRequest, *scm.Response, error) {
+func (s *pullService) convertPullRequestList(ctx context.Context, repo string, from []*pr) ([]*scm.PullRequest, *scm.Response, error) {
 	to := []*scm.PullRequest{}
 	for _, v := range from {
-		converted, res, err := s.convertPullRequest(ctx, v)
+		converted, res, err := s.convertPullRequest(ctx, repo, v)
 		if err != nil {
 			return nil, res, err
 		}
@@ -358,14 +359,7 @@ func (s *pullService) convertPullRequestList(ctx context.Context, from []*pr) ([
 	return to, nil, nil
 }
 
-func (s *pullService) convertPullRequest(ctx context.Context, from *pr) (*scm.PullRequest, *scm.Response, error) {
-	// Diff refs only seem to be populated in more recent merge requests. Default
-	// to from.Sha for compatibility / consistency, but fallback to HeadSHA if
-	// it's not populated.
-	headSHA := from.Sha
-	if headSHA == "" && from.DiffRefs.HeadSHA != "" {
-		headSHA = from.DiffRefs.HeadSHA
-	}
+func (s *pullService) convertPullRequest(ctx context.Context, repo string, from *pr) (*scm.PullRequest, *scm.Response, error) {
 	var assignees []scm.User
 	if from.Assignee != nil {
 		assignees = append(assignees, *convertUser(from.Assignee))
@@ -395,6 +389,8 @@ func (s *pullService) convertPullRequest(ctx context.Context, from *pr) (*scm.Pu
 	if err != nil {
 		return nil, res, err
 	}
+	link := *s.client.BaseURL
+	link.Path = path.Join(link.Path, repo, "merge_requests", strconv.Itoa(from.Number))
 	return &scm.PullRequest{
 		Number:         from.Number,
 		Title:          from.Title,
@@ -405,7 +401,7 @@ func (s *pullService) convertPullRequest(ctx context.Context, from *pr) (*scm.Pu
 		Ref:            fmt.Sprintf("refs/merge-requests/%d/head", from.Number),
 		Source:         from.SourceBranch,
 		Target:         from.TargetBranch,
-		Link:           from.Link,
+		Link:           link.String(),
 		Draft:          from.WIP,
 		Closed:         from.State != "opened",
 		Merged:         from.State == "merged",
@@ -415,16 +411,16 @@ func (s *pullService) convertPullRequest(ctx context.Context, from *pr) (*scm.Pu
 		Assignees:      assignees,
 		Head: scm.PullRequestBranch{
 			Ref:  from.SourceBranch,
-			Sha:  headSHA,
+			Sha:  from.HeadSHA,
 			Repo: *headRepo,
 		},
 		Base: scm.PullRequestBranch{
 			Ref:  from.TargetBranch,
-			Sha:  from.DiffRefs.BaseSHA,
+			Sha:  from.BaseSHA,
 			Repo: *baseRepo,
 		},
-		Created: from.Created,
-		Updated: from.Updated,
+		Created: from.Created.Time,
+		Updated: from.Updated.Time,
 		Fork:    sourceRepo.PathNamespace,
 	}, nil, nil
 }

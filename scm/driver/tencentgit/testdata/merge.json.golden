@@ -1,75 +1,78 @@
 {
-    "Number": 1,
-    "Title": "edit README",
-    "State": "opened",
-    "Body": "edit README\"",
-    "Sha": "26a65da1a8979640c67b099a4ed2538b9feddee2",
-    "Ref": "refs/merge-requests/1/head",
-    "Source": "fix",
-    "Target": "master",
-    "Link": "https://git.code.tencent.com/xinnjie/testme/merge_requests/1",
-    "Closed": true,
-    "Merged": false,
-    "Mergeable": true,
-    "MergeableState": "mergeable",
-    "Draft": true,
-    "Author": {
-        "ID": 13356,
-        "Login": "dblessing",
-        "Name": "Drew Blessing",
-        "Email": "",
-        "Avatar": "https://secure.gravatar.com/avatar/b5bf44866b4eeafa2d8114bfe15da02f?s=80\u0026d=identicon"
-    },
-    "Assignees": [{
-        "ID": 12,
-        "Login": "axel.block",
-        "Name": "Miss Monserrate Beier",
-        "Avatar": "http://www.gravatar.com/avatar/46f6f7dc858ada7be1853f7fb96e81da?s=80&d=identicon"
-    }],
-    "Created": "2015-12-18T18:29:53.563Z",
-    "Updated": "2015-12-18T18:30:22.522Z",
-    "Fork": "diaspora/diaspora",
-    "Head": {
-        "Ref": "fix",
-        "Sha": "12d65c8dd2b2676fa3ac47d955accc085a37a9c1",
-        "Repo": {
-            "ID": "32732",
-            "Namespace": "diaspora",
-            "Name": "diaspora",
-            "FullName": "diaspora/diaspora",
-            "Perm": {
-                "Pull": true,
-                "Push": false,
-                "Admin": false
-            },
-            "Branch": "master",
-            "Private": false,
-            "Clone": "https://gitlab.com/diaspora/diaspora.git",
-            "CloneSSH": "git@gitlab.com:diaspora/diaspora.git",
-            "Link": "https://gitlab.com/diaspora/diaspora",
-            "Created": "0001-01-01T00:00:00Z",
-            "Updated": "0001-01-01T00:00:00Z"
-        }
-    },
-    "Base": {
-        "Ref": "master",
-        "Repo": {
-            "ID": "32732",
-            "Namespace": "diaspora",
-            "Name": "diaspora",
-            "FullName": "diaspora/diaspora",
-            "Perm": {
-                "Pull": true,
-                "Push": false,
-                "Admin": false
-            },
-            "Branch": "master",
-            "Private": false,
-            "Clone": "https://gitlab.com/diaspora/diaspora.git",
-            "CloneSSH": "git@gitlab.com:diaspora/diaspora.git",
-            "Link": "https://gitlab.com/diaspora/diaspora",
-            "Created": "0001-01-01T00:00:00Z",
-            "Updated": "0001-01-01T00:00:00Z"
-        }
+  "Number": 1,
+  "Title": "edit README",
+  "State": "closed",
+  "Body": "edit README",
+  "Sha": "a398282a168e6919e8ff3806e1fa11f66ab53d30",
+  "Ref": "refs/merge-requests/1/head",
+  "Source": "mr-test",
+  "Target": "master",
+  "Link": "https://git.code.tencent.com/xinnjie/testme/merge_requests/1",
+  "Closed": true,
+  "Merged": true,
+  "Mergeable": true,
+  "MergeableState": "mergeable",
+  "Draft": false,
+  "Author": {
+    "ID": 176405,
+    "Login": "xinnjie",
+    "Name": "xinnjie",
+    "Email": "",
+    "Avatar": "https://git.code.tencent.com/uploads/user/avatar/176405/7e72ab97e19e430287c34c54af3bf7e1."
+  },
+  "Assignees": [
+    {
+      "ID": 176405,
+      "Login": "xinnjie",
+      "Name": "xinnjie",
+      "Avatar": "https://git.code.tencent.com/uploads/user/avatar/176405/7e72ab97e19e430287c34c54af3bf7e1."
     }
+  ],
+  "Created": "2021-08-22T16:22:38.000Z",
+  "Updated": "2021-08-22T16:29:28.000Z",
+  "Fork": "xinnjie/testme",
+  "Head": {
+    "Ref": "mr-test",
+    "Sha": "26a65da1a8979640c67b099a4ed2538b9feddee2",
+    "Repo": {
+      "ID": "179129",
+      "Namespace": "xinnjie",
+      "Name": "testme",
+      "FullName": "xinnjie/testme",
+      "Perm": {
+        "Pull": true,
+        "Push": false,
+        "Admin": false
+      },
+      "Branch": "master",
+      "Private": false,
+      "Clone": "https://git.code.tencent.com/xinnjie/testme.git",
+      "CloneSSH": "git@git.code.tencent.com:xinnjie/testme.git",
+      "Link": "https://git.code.tencent.com/xinnjie/testme",
+      "Created": "2021-08-20T10:44:47Z",
+      "Updated": "0001-01-01T00:00:00Z"
+    }
+  },
+  "Base": {
+    "Ref": "master",
+    "Sha": "652a91b83cf37786c64eb286f1efba453a15f34f",
+    "Repo": {
+      "ID": "179129",
+      "Namespace": "xinnjie",
+      "Name": "testme",
+      "FullName": "xinnjie/testme",
+      "Perm": {
+        "Pull": true,
+        "Push": false,
+        "Admin": false
+      },
+      "Branch": "master",
+      "Private": false,
+      "Clone": "https://git.code.tencent.com/xinnjie/testme.git",
+      "CloneSSH": "git@git.code.tencent.com:xinnjie/testme.git",
+      "Link": "https://git.code.tencent.com/xinnjie/testme",
+      "Created": "2021-08-20T10:44:47Z",
+      "Updated": "0001-01-01T00:00:00Z"
+    }
+  }
 }

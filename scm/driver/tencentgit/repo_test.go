@@ -110,7 +110,7 @@ func TestRepositoryFind(t *testing.T) {
 		File("testdata/repo.json")
 
 	client := NewDefault()
-	got, res, err := client.Repositories.Find(context.Background(), "xinnjie/testme")
+	got, _, err := client.Repositories.Find(context.Background(), "xinnjie/testme")
 	if err != nil {
 		t.Error(err)
 		return
@@ -125,8 +125,6 @@ func TestRepositoryFind(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestRepositoryPerms(t *testing.T) {
