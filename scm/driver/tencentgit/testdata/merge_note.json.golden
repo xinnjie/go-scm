@@ -1,12 +1,12 @@
 {
-    "ID": 301,
-    "Body": "Comment for MR",
-    "Author": {
-        "Login": "pipin",
-        "Name": "Pip",
-        "Email": "",
-        "Avatar": ""
-    },
-    "Created": "2013-10-02T08:57:14Z",
-    "Updated": "2013-10-02T08:57:14Z"
+  "ID": 1383976,
+  "Body": "test comment",
+  "Author": {
+    "Login": "xinnjie",
+    "Name": "xinnjie",
+    "Email": "",
+    "Avatar": "https://git.code.tencent.com/uploads/user/avatar/176405/7e72ab97e19e430287c34c54af3bf7e1."
+  },
+  "Created": "2021-08-24T11:41:23Z",
+  "Updated": "2021-08-24T11:41:23Z"
 }

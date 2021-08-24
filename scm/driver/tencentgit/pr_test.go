@@ -176,14 +176,11 @@ func TestPullClose(t *testing.T) {
 		SetHeaders(mockHeaders)
 
 	client := NewDefault()
-	res, err := client.PullRequests.Close(context.Background(), "xinnjie/testme", 1347)
+	_, err := client.PullRequests.Close(context.Background(), "xinnjie/testme", 1347)
 	if err != nil {
 		t.Error(err)
 		return
 	}
-
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestPullReopen(t *testing.T) {
@@ -197,14 +194,11 @@ func TestPullReopen(t *testing.T) {
 		SetHeaders(mockHeaders)
 
 	client := NewDefault()
-	res, err := client.PullRequests.Reopen(context.Background(), "xinnjie/testme", 1347)
+	_, err := client.PullRequests.Reopen(context.Background(), "xinnjie/testme", 1347)
 	if err != nil {
 		t.Error(err)
 		return
 	}
-
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestPullCommentFind(t *testing.T) {
@@ -218,7 +212,7 @@ func TestPullCommentFind(t *testing.T) {
 		File("testdata/merge_note.json")
 
 	client := NewDefault()
-	got, res, err := client.PullRequests.FindComment(context.Background(), "xinnjie/testme", 2, 1)
+	got, _, err := client.PullRequests.FindComment(context.Background(), "xinnjie/testme", 2, 1)
 	if err != nil {
 		t.Error(err)
 		return
@@ -232,9 +226,6 @@ func TestPullCommentFind(t *testing.T) {
 		t.Errorf("Unexpected Results")
 		t.Log(diff)
 	}
-
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestPullListComments(t *testing.T) {
@@ -266,8 +257,6 @@ func TestPullListComments(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 	t.Run("Page", testPage(res))
 }
 

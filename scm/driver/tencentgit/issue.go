@@ -290,16 +290,14 @@ type issueAssignee struct {
 }
 
 type issueComment struct {
-	ID     int `json:"id"`
-	Number int `json:"noteable_iid"`
-	User   struct {
+	ID   int `json:"id"`
+	User struct {
 		Username  string `json:"username"`
 		AvatarURL string `json:"avatar_url"`
 		Name      string `json:"name"`
 	} `json:"author"`
-	Body      string    `json:"body"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Body      string `json:"body"`
+	CreatedAt Time   `json:"created_at"`
 }
 
 type issueCommentInput struct {
@@ -390,7 +388,7 @@ func convertIssueComment(from *issueComment) *scm.Comment {
 			Login:  from.User.Username,
 			Avatar: from.User.AvatarURL,
 		},
-		Created: from.CreatedAt,
-		Updated: from.UpdatedAt,
+		Created: from.CreatedAt.Time,
+		Updated: from.CreatedAt.Time,
 	}
 }
