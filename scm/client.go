@@ -127,6 +127,8 @@ type (
 		// This can be set to httputil.DumpResponse.
 		DumpResponse func(*http.Response, bool) ([]byte, error)
 
+		NewResponse func(r *http.Response) *Response
+
 		// snapshot of the request rate limit.
 		rate Rate
 	}
@@ -190,7 +192,12 @@ func (c *Client) Do(ctx context.Context, in *Request) (*Response, error) {
 	if c.DumpResponse != nil {
 		_, err = c.DumpResponse(res, true)
 	}
-	return newResponse(res), err
+
+	// NewResponse can be overridden, if not specified, use default newResponse
+	if c.NewResponse == nil {
+		c.NewResponse = newResponse
+	}
+	return c.NewResponse(res), err
 }
 
 // newResponse creates a new Response for the provided

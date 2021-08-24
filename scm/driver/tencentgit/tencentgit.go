@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -48,6 +49,25 @@ func New(uri string) (*scm.Client, error) {
 	client.Repositories = &repositoryService{client}
 	client.Reviews = &reviewService{client}
 	client.Commits = &commitService{client}
+	client.NewResponse = func(r *http.Response) *scm.Response {
+		res := &scm.Response{
+			Status: r.StatusCode,
+			Header: r.Header,
+			Body:   r.Body,
+		}
+
+		if nextPage, err := strconv.Atoi(r.Header.Get("X-Next-Page")); err == nil {
+			res.Page.Next = nextPage
+		}
+		if prevPage, err := strconv.Atoi(r.Header.Get("X-Prev-Page")); err == nil {
+			res.Page.Prev = prevPage
+		}
+		if lastPage, err := strconv.Atoi(r.Header.Get("X-Total-Pages")); err == nil {
+			res.Page.Last = lastPage
+			res.Page.First = 1 // firstPage is always 1 if pagination is present
+		}
+		return res
+	}
 	//
 	////add the user service to the webhook service so it can be used for fetching users
 	//us := &userService{client}
