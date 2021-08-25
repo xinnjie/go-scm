@@ -205,7 +205,7 @@ func testBranch(branch *scm.Reference) func(t *testing.T) {
 		if got, want := branch.Name, "feature"; got != want {
 			t.Errorf("Want branch Name %q, got %q", want, got)
 		}
-		if got, want := branch.Sha, "0b4bc9a49b562e85de7cc9e834518ea6828729b9"; got != want {
+		if got, want := branch.Sha, "225163e0798965b54b6df9579e35f0725176a792"; got != want {
 			t.Errorf("Want branch Avatar %q, got %q", want, got)
 		}
 	}
@@ -216,7 +216,7 @@ func testTag(tag *scm.Reference) func(t *testing.T) {
 		if got, want := tag.Name, "v1.1.0"; got != want {
 			t.Errorf("Want tag Name %q, got %q", want, got)
 		}
-		if got, want := tag.Sha, "5937ac0a7beb003549fc5fd26fc247adbce4a52e"; got != want {
+		if got, want := tag.Sha, "225163e0798965b54b6df9579e35f0725176a792"; got != want {
 			t.Errorf("Want tag Avatar %q, got %q", want, got)
 		}
 	}

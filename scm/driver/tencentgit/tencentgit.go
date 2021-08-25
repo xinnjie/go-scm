@@ -49,6 +49,8 @@ func New(uri string) (*scm.Client, error) {
 	client.Repositories = &repositoryService{client}
 	client.Reviews = &reviewService{client}
 	client.Commits = &commitService{client}
+
+	// tencentgit pagination is different from github, override NewResponse function
 	client.NewResponse = func(r *http.Response) *scm.Response {
 		res := &scm.Response{
 			Status: r.StatusCode,
