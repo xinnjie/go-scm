@@ -44,7 +44,7 @@ func (s *pullService) FindComment(ctx context.Context, repo string, index, id in
 func (s *pullService) List(ctx context.Context, repo string, opts scm.PullRequestListOptions) ([]*scm.PullRequest, *scm.Response, error) {
 	// label not supported refer to  https://git.woa.com/help/menu/api/merge_requests.html#获取合并请求列表
 	if len(opts.Labels) != 0 {
-		return nil, nil, scm.ErrNotSupported
+		opts.Labels = nil
 	}
 	path := fmt.Sprintf("api/v3/projects/%s/merge_requests?%s", encode(repo), encodePullRequestListOptions(opts))
 	out := []*pr{}

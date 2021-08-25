@@ -99,11 +99,13 @@ func encodePullRequestListOptions(opts scm.PullRequestListOptions) string {
 		params.Set("per_page", strconv.Itoa(opts.Size))
 	}
 
-	// if opts.Closed/Open not set, retrieve all
-	if opts.Closed {
-		params.Set("state", "closed")
-	} else if opts.Open {
-		params.Set("state", "opened")
+	// if opts.Closed/Open not set or all set, retrieve all
+	if (!opts.Closed && opts.Open) || (opts.Closed && !opts.Open) {
+		if opts.Closed {
+			params.Set("state", "closed")
+		} else if opts.Open {
+			params.Set("state", "opened")
+		}
 	}
 
 	if len(opts.Labels) > 0 {
