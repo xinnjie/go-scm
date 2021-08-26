@@ -111,7 +111,7 @@ func testPullRequestChanges(client *scm.Client) func(t *testing.T) {
 	return func(t *testing.T) {
 		t.Parallel()
 		opts := scm.ListOptions{}
-		result, _, err := client.PullRequests.ListChanges(context.Background(), "xinnjie/testme", 1, opts)
+		result, _, err := client.PullRequests.ListChanges(context.Background(), "xinnjie/testme", 339869, opts)
 		if err != nil {
 			t.Error(err)
 		}
@@ -208,7 +208,7 @@ func testPullRequestComment(comment *scm.Comment) func(t *testing.T) {
 
 func testChange(change *scm.Change) func(t *testing.T) {
 	return func(t *testing.T) {
-		if got, want := change.Path, "files/js/application.js"; got != want {
+		if got, want := change.Path, "README.md"; got != want {
 			t.Errorf("Want file change Path %q, got %q", want, got)
 		}
 		if got, want := change.Added, false; got != want {
