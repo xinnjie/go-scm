@@ -49,14 +49,6 @@ type link struct {
 	Name string `json:"name"`
 }
 
-type perms struct {
-	Values []*perm `json:"values"`
-}
-
-type perm struct {
-	Permissions string `json:"permission"`
-}
-
 type hooks struct {
 	pagination
 	Values []*hook `json:"values"`
@@ -108,6 +100,30 @@ type participant struct {
 	Permission string `json:"permission"`
 }
 
+type projGroups struct {
+	pagination
+	Values []*projGroup
+}
+
+type projGroup struct {
+	Group      group  `json:"group"`
+	Permission string `json:"permission"`
+}
+
+type group struct {
+	Name string `json:"name"`
+}
+
+type members struct {
+	pagination
+	Values []*member `json:"values"`
+}
+
+type member struct {
+	Name string `json:"name"`
+	Slug string `json:"slug"`
+}
+
 type repositoryService struct {
 	client *wrapper
 }
@@ -139,6 +155,7 @@ func (s *repositoryService) Create(ctx context.Context, input *scm.RepositoryInp
 type forkProjectInput struct {
 	Key string `json:"key,omitempty"`
 }
+
 type forkInput struct {
 	Slug    string            `json:"slug,omitempty"`
 	Project *forkProjectInput `json:"project,omitempty"`
@@ -164,7 +181,6 @@ func (s *repositoryService) FindCombinedStatus(ctx context.Context, repo, ref st
 	path := fmt.Sprintf("rest/build-status/1.0/commits/%s?orderBy=oldest", url.PathEscape(ref))
 	out := new(statuses)
 	res, err := s.client.do(ctx, "GET", path, nil, &out)
-
 	if err != nil {
 		return nil, res, err
 	}
@@ -261,7 +277,7 @@ func (s *repositoryService) ListCollaborators(ctx context.Context, repo string, 
 	opts := scm.ListOptions{
 		Size: 1000,
 	}
-	//path := fmt.Sprintf("rest/api/1.0/projects/%s/repos/%s/participants?role=PARTICIPANT&%s", namespace, name, encodeListOptions(opts))
+	// path := fmt.Sprintf("rest/api/1.0/projects/%s/repos/%s/participants?role=PARTICIPANT&%s", namespace, name, encodeListOptions(opts))
 	path := fmt.Sprintf("rest/api/1.0/projects/%s/repos/%s/permissions/users?%s", namespace, name, encodeListOptions(opts))
 	out := new(participants)
 	res, err := s.client.do(ctx, "GET", path, nil, out)
@@ -539,7 +555,6 @@ func convertStatusList(from *statuses) []*scm.Status {
 		to = append(to, convertStatus(v))
 	}
 	return to
-
 }
 
 func convertStatus(from *status) *scm.Status {

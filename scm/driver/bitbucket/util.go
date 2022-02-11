@@ -39,18 +39,16 @@ func encodeListOptions(opts scm.ListOptions) string {
 	return params.Encode()
 }
 
-func encodeRefQueryOptions(name string) string {
-	params := url.Values{}
-	params.Set("name", name)
-	return params.Encode()
-}
-
 func encodeListRoleOptions(opts scm.ListOptions) string {
 	params := url.Values{}
 	if opts.Page != 0 {
 		params.Set("page", strconv.Itoa(opts.Page))
 	}
 	if opts.Size != 0 {
+		// Max length for size globally for bitbucket cloud is 100 (https://developer.atlassian.com/cloud/bitbucket/rest/intro/#pagination)
+		if opts.Size > 100 {
+			opts.Size = 100
+		}
 		params.Set("pagelen", strconv.Itoa(opts.Size))
 	}
 	params.Set("role", "member")
