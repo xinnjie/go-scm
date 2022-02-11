@@ -83,7 +83,6 @@ func TestIssueList(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/issues").
 		MatchParam("page", "1").
 		MatchParam("per_page", "30").
-		MatchParam("state", "all").
 		Reply(200).
 		Type("application/json").
 		SetHeaders(mockHeaders).
@@ -106,8 +105,6 @@ func TestIssueList(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 	t.Run("Page", testPage(res))
 }
 

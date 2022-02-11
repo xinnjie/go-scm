@@ -8,6 +8,8 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"path"
+	"strconv"
 	"strings"
 	"time"
 
@@ -148,7 +150,7 @@ func (s *issueService) Find(ctx context.Context, repo string, number int) (*scm.
 	path := fmt.Sprintf("api/v3/projects/%s/issues/%d", encode(repo), number)
 	out := new(issue)
 	res, err := s.client.do(ctx, "GET", path, nil, out)
-	return convertIssue(out), res, err
+	return convertIssue(out, *s.client.BaseURL, repo), res, err
 }
 
 func (s *issueService) FindComment(ctx context.Context, repo string, index, id int) (*scm.Comment, *scm.Response, error) {
@@ -162,7 +164,7 @@ func (s *issueService) List(ctx context.Context, repo string, opts scm.IssueList
 	path := fmt.Sprintf("api/v3/projects/%s/issues?%s", encode(repo), encodeIssueListOptions(opts))
 	out := []*issue{}
 	res, err := s.client.do(ctx, "GET", path, nil, &out)
-	return convertIssueList(out), res, err
+	return convertIssueList(out, *s.client.BaseURL, repo), res, err
 }
 
 func (s *issueService) ListComments(ctx context.Context, repo string, index int, opts scm.ListOptions) ([]*scm.Comment, *scm.Response, error) {
@@ -179,7 +181,7 @@ func (s *issueService) Create(ctx context.Context, repo string, input *scm.Issue
 	path := fmt.Sprintf("api/v3/projects/%s/issues?%s", encode(repo), in.Encode())
 	out := new(issue)
 	res, err := s.client.do(ctx, "POST", path, nil, out)
-	return convertIssue(out), res, err
+	return convertIssue(out, *s.client.BaseURL, repo), res, err
 }
 
 func (s *issueService) CreateComment(ctx context.Context, repo string, number int, input *scm.CommentInput) (*scm.Comment, *scm.Response, error) {
@@ -266,8 +268,6 @@ type issue struct {
 	State  string   `json:"state"`
 	Title  string   `json:"title"`
 	Desc   string   `json:"description"`
-	Link   string   `json:"web_url"`
-	Locked bool     `json:"discussion_locked"`
 	Labels []string `json:"labels"`
 	Author struct {
 		Name     string      `json:"name"`
@@ -276,8 +276,8 @@ type issue struct {
 	} `json:"author"`
 	Assignee  *issueAssignee   `json:"assignee"`
 	Assignees []*issueAssignee `json:"assignees"`
-	Created   time.Time        `json:"created_at"`
-	Updated   time.Time        `json:"updated_at"`
+	Created   Time             `json:"created_at"`
+	Updated   Time             `json:"updated_at"`
 }
 
 type issueAssignee struct {
@@ -306,25 +306,28 @@ type issueCommentInput struct {
 
 // helper function to convert from the tencentgit issue list to
 // the common issue structure.
-func convertIssueList(from []*issue) []*scm.Issue {
+func convertIssueList(from []*issue, baseUrl url.URL, repo string) []*scm.Issue {
 	to := []*scm.Issue{}
 	for _, v := range from {
-		to = append(to, convertIssue(v))
+		to = append(to, convertIssue(v, baseUrl, repo))
 	}
 	return to
 }
 
 // helper function to convert from the tencentgit issue structure to
 // the common issue structure.
-func convertIssue(from *issue) *scm.Issue {
+func convertIssue(from *issue, baseUrl url.URL, repo string) *scm.Issue {
+	link := baseUrl
+	link.Path = path.Join(link.Path, repo, "issues", strconv.Itoa(from.Number))
+
 	return &scm.Issue{
 		Number: from.Number,
 		Title:  from.Title,
 		Body:   from.Desc,
 		State:  tencentgitStateToSCMState(from.State),
-		Link:   from.Link,
+		Link:   link.String(),
 		Labels: from.Labels,
-		Locked: from.Locked,
+		Locked: false, // tencentgit do not have lock state
 		Closed: from.State == "closed",
 		Author: scm.User{
 			Name:   from.Author.Name,
@@ -332,8 +335,8 @@ func convertIssue(from *issue) *scm.Issue {
 			Avatar: from.Author.Avatar.String,
 		},
 		Assignees: convertIssueAssignees(from.Assignee, from.Assignees),
-		Created:   from.Created,
-		Updated:   from.Updated,
+		Created:   from.Created.Time,
+		Updated:   from.Updated.Time,
 	}
 }
 

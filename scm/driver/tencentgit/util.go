@@ -65,7 +65,7 @@ func encodeIssueListOptions(opts scm.IssueListOptions) string {
 		params.Set("per_page", strconv.Itoa(opts.Size))
 	}
 	if opts.Open && opts.Closed {
-		params.Set("state", "all")
+		// state not set means list all issues
 	} else if opts.Closed {
 		params.Set("state", "closed")
 	} else if opts.Open {

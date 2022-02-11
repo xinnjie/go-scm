@@ -38,7 +38,7 @@ func (s *webhookService) Parse(req *http.Request, fn scm.SecretFunc) (scm.Webhoo
 	}
 
 	var hook scm.Webhook
-	event := req.Header.Get("X-Gitlab-Event")
+	event := req.Header.Get("X-Event")
 	switch event {
 	case "Push Hook", "Tag Push Hook":
 		hook, err = parsePushHook(data)
@@ -67,7 +67,7 @@ func (s *webhookService) Parse(req *http.Request, fn scm.SecretFunc) (scm.Webhoo
 		return hook, nil
 	}
 
-	if subtle.ConstantTimeCompare([]byte(req.Header.Get("X-Gitlab-Token")), []byte(token)) == 0 {
+	if subtle.ConstantTimeCompare([]byte(req.Header.Get("X-Token")), []byte(token)) == 0 {
 		return hook, scm.ErrSignatureInvalid
 	}
 	return hook, nil
@@ -160,24 +160,21 @@ func convertPushHook(src *pushHook) *scm.PushHook {
 			Sha:     src.CheckoutSha,
 			Message: "", // NOTE this is set below
 			Author: scm.Signature{
-				Login:  src.UserUsername,
-				Name:   src.UserName,
-				Email:  src.UserEmail,
-				Avatar: src.UserAvatar,
+				Login: src.UserUsername,
+				Name:  src.UserName,
+				Email: src.UserEmail,
 			},
 			Committer: scm.Signature{
-				Login:  src.UserUsername,
-				Name:   src.UserName,
-				Email:  src.UserEmail,
-				Avatar: src.UserAvatar,
+				Login: src.UserUsername,
+				Name:  src.UserName,
+				Email: src.UserEmail,
 			},
 			Link: "", // NOTE this is set below
 		},
 		Sender: scm.User{
-			Login:  src.UserUsername,
-			Name:   src.UserName,
-			Email:  src.UserEmail,
-			Avatar: src.UserAvatar,
+			Login: src.UserUsername,
+			Name:  src.UserName,
+			Email: src.UserEmail,
 		},
 	}
 	if len(src.Commits) > 0 {
@@ -491,22 +488,22 @@ type (
 		HTTPURL           string      `json:"http_url"`
 	}
 
+	//doc at https://git.woa.com/help/menu/manual/webhooks.html#推送事件
 	pushHook struct {
-		ObjectKind   string      `json:"object_kind"`
-		EventName    string      `json:"event_name"`
-		Before       string      `json:"before"`
-		After        string      `json:"after"`
-		Ref          string      `json:"ref"`
-		CheckoutSha  string      `json:"checkout_sha"`
-		Message      interface{} `json:"message"`
-		UserID       int         `json:"user_id"`
-		UserName     string      `json:"user_name"`
-		UserUsername string      `json:"user_username"`
-		UserEmail    string      `json:"user_email"`
-		UserAvatar   string      `json:"user_avatar"`
-		ProjectID    int         `json:"project_id"`
-		Project      project     `json:"project"`
-		Commits      []struct {
+		ObjectKind    string      `json:"object_kind"`    // is "push"
+		OperationKind string      `json:"operation_kind"` // "create"/"delete"/"update"/"update_nonfastward"
+		ActionKind    string      `json:"action_kind"`
+		Before        string      `json:"before"`
+		After         string      `json:"after"`
+		Ref           string      `json:"ref"`
+		CheckoutSha   string      `json:"checkout_sha"`
+		Message       interface{} `json:"message"`
+		UserID        int         `json:"user_id"`
+		UserName      string      `json:"user_name"`
+		UserUsername  string      `json:"user_username"`
+		UserEmail     string      `json:"user_email"`
+		ProjectID     int         `json:"project_id"`
+		Commits       []struct {
 			ID        string `json:"id"`
 			Message   string `json:"message"`
 			Timestamp string `json:"timestamp"`
@@ -677,21 +674,16 @@ type (
 	}
 
 	tagHook struct {
-		ObjectKind   string      `json:"object_kind"`
-		EventName    string      `json:"event_name"`
-		Before       string      `json:"before"`
-		After        string      `json:"after"`
-		Ref          string      `json:"ref"`
-		CheckoutSha  string      `json:"checkout_sha"`
-		Message      interface{} `json:"message"`
-		UserID       int         `json:"user_id"`
-		UserName     string      `json:"user_name"`
-		UserUsername string      `json:"user_username"`
-		UserEmail    string      `json:"user_email"`
-		UserAvatar   string      `json:"user_avatar"`
-		ProjectID    int         `json:"project_id"`
-		Project      project     `json:"project"`
-		Commits      []struct {
+		ObjectKind    string `json:"object_kind"` // "tag_push"
+		OperationKind string `json:"operation_kind"`
+		Before        string `json:"before"`
+		After         string `json:"after"`
+		Ref           string `json:"ref"`
+		UserID        int    `json:"user_id"`
+		UserName      string `json:"user_name"`
+		UserEmail     string `json:"user_email"`
+		ProjectID     int    `json:"project_id"`
+		Commits       []struct {
 			ID        string `json:"id"`
 			Message   string `json:"message"`
 			Timestamp string `json:"timestamp"`
@@ -704,7 +696,8 @@ type (
 			Modified []interface{} `json:"modified"`
 			Removed  []interface{} `json:"removed"`
 		} `json:"commits"`
-		TotalCommitsCount int `json:"total_commits_count"`
+		TotalCommitsCount int    `json:"total_commits_count"`
+		CreateFrom        string `json:"create_from"`
 		Repository        struct {
 			Name            string `json:"name"`
 			URL             string `json:"url"`

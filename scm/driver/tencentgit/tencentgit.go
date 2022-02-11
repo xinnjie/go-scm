@@ -70,14 +70,14 @@ func New(uri string) (*scm.Client, error) {
 		}
 		return res
 	}
-	//
-	////add the user service to the webhook service so it can be used for fetching users
-	//us := &userService{client}
-	//client.Users = us
-	//client.Webhooks = &webhookService{
-	//	client:      client,
-	//	userService: us,
-	//}
+
+	//add the user service to the webhook service so it can be used for fetching users
+	us := &userService{client}
+	client.Users = us
+	client.Webhooks = &webhookService{
+		client:      client,
+		userService: us,
+	}
 	//
 	//graphqlEndpoint := scm.URLJoin(uri, "/api/graphql")
 	//client.GraphQLURL, err = url.Parse(graphqlEndpoint)

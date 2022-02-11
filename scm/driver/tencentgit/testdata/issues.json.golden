@@ -1,0 +1,31 @@
+[
+  {
+    "Number": 1,
+    "Title": "test issue",
+    "Body": "issue for test",
+    "State": "open",
+    "Link": "https://git.code.tencent.com/xinnjie/testme/issues/1",
+    "Labels": [
+      "test_label"
+    ],
+    "Closed": false,
+    "Locked": false,
+    "Author": {
+      "Login": "xinnjie",
+      "Name": "xinnjie",
+      "Email": "",
+      "Avatar": "https://git.code.tencent.com/uploads/user/avatar/176405/7e72ab97e19e430287c34c54af3bf7e1."
+    },
+    "Assignees": [
+      {
+        "ID": 176405,
+        "Login": "xinnjie",
+        "Name": "xinnjie",
+        "Link": "https://git.code.tencent.com/u/xinnjie",
+        "Avatar":  "https://git.code.tencent.com/uploads/user/avatar/176405/7e72ab97e19e430287c34c54af3bf7e1."
+      }
+    ],
+    "Created": "2021-08-26T05:15:43.000Z",
+    "Updated": "2021-08-26T05:15:43.000Z"
+  }
+]
