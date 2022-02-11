@@ -28,7 +28,7 @@ func TestTencentgit(t *testing.T) {
 
 	//t.Run("Contents", testContents(client))
 	t.Run("Git", testGit(client))
-	t.Run("Issues", testIssues(client))
+	//t.Run("Issues", testIssues(client))
 	//t.Run("Organizations", testOrgs(client))
 	t.Run("PullRequests", testPullRequests(client))
 	//t.Run("Repositories", testRepos(client))

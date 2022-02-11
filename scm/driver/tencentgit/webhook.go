@@ -150,8 +150,27 @@ func parseReleaseHook(s *webhookService, data []byte) (scm.Webhook, error) {
 	return convertReleaseHook(src)
 }
 
+func convertRepositoryHook(from *pushHook) *scm.Repository {
+	repo := from.Repository
+	return &scm.Repository{
+		ID:        strconv.Itoa(from.ProjectID),
+		Namespace: "", // TODO(xinnjie) namespace can be retrieved from url
+		Name:      repo.Name,
+		FullName:  "",    // TODO(xinnjie)
+		Perm:      nil,   // TODO(xinnjie) need query repo info
+		Branch:    "",    // TODO
+		Private:   false, // TODO
+		Archived:  false, // TODO
+		Clone:     repo.GitHTTPURL,
+		CloneSSH:  repo.GitSSHURL,
+		Link:      repo.Homepage,
+		Created:   time.Time{}, // TODO
+		Updated:   time.Time{}, // TODO
+	}
+}
+
 func convertPushHook(src *pushHook) *scm.PushHook {
-	repo := *convertRepositoryHook(&src.Project)
+	repo := *convertRepositoryHook(src)
 	dst := &scm.PushHook{
 		Ref:   scm.ExpandRef(src.Ref, "refs/heads/"),
 		Repo:  repo,
@@ -416,21 +435,6 @@ func convertMergeRequestCommentHook(s *webhookService, src *commentHook) (*scm.P
 	return hook, nil
 }
 
-func convertRepositoryHook(from *project) *scm.Repository {
-	namespace, name := scm.Split(from.PathWithNamespace)
-	return &scm.Repository{
-		ID:        strconv.Itoa(from.ID),
-		Namespace: namespace,
-		Name:      name,
-		FullName:  from.PathWithNamespace,
-		Clone:     from.GitHTTPURL,
-		CloneSSH:  from.GitSSHURL,
-		Link:      from.WebURL,
-		Branch:    from.DefaultBranch,
-		Private:   false, // TODO how do we correctly set Private vs Public?
-	}
-}
-
 func convertReleaseHook(from *releaseHook) (*scm.ReleaseHook, error) {
 	created, err := time.Parse("2006-01-02 15:04:05 MST", from.CreatedAt)
 	if err != nil {
@@ -469,29 +473,10 @@ func convertAction(src string) (action scm.Action) {
 }
 
 type (
-	project struct {
-		ID                int         `json:"id"`
-		Name              string      `json:"name"`
-		Description       string      `json:"description"`
-		WebURL            string      `json:"web_url"`
-		AvatarURL         interface{} `json:"avatar_url"`
-		GitSSHURL         string      `json:"git_ssh_url"`
-		GitHTTPURL        string      `json:"git_http_url"`
-		Namespace         string      `json:"namespace"`
-		VisibilityLevel   int         `json:"visibility_level"`
-		PathWithNamespace string      `json:"path_with_namespace"`
-		DefaultBranch     string      `json:"default_branch"`
-		CiConfigPath      interface{} `json:"ci_config_path"`
-		Homepage          string      `json:"homepage"`
-		URL               string      `json:"url"`
-		SSHURL            string      `json:"ssh_url"`
-		HTTPURL           string      `json:"http_url"`
-	}
-
 	//doc at https://git.woa.com/help/menu/manual/webhooks.html#推送事件
 	pushHook struct {
-		ObjectKind    string      `json:"object_kind"`    // is "push"
-		OperationKind string      `json:"operation_kind"` // "create"/"delete"/"update"/"update_nonfastward"
+		ObjectKind    string      `json:"object_kind"`
+		OperationKind string      `json:"operation_kind"`
 		ActionKind    string      `json:"action_kind"`
 		Before        string      `json:"before"`
 		After         string      `json:"after"`
@@ -535,8 +520,7 @@ type (
 			Username  string `json:"username"`
 			AvatarURL string `json:"avatar_url"`
 		} `json:"user"`
-		ProjectID        int     `json:"project_id"`
-		Project          project `json:"project"`
+		ProjectID        int `json:"project_id"`
 		ObjectAttributes struct {
 			ID           int         `json:"id"`
 			Note         string      `json:"note"`
