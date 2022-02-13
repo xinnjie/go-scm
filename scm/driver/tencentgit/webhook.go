@@ -150,48 +150,71 @@ func parseReleaseHook(s *webhookService, data []byte) (scm.Webhook, error) {
 	return convertReleaseHook(src)
 }
 
-func convertRepositoryHook(from *pushHook) *scm.Repository {
-	repo := from.Repository
+func (repo *repo) ToScmRepository(projectID int) *scm.Repository {
+	httpUrl := repo.HttpUrl
+	sshUrl := repo.SshUrl
+	homePage := repo.HomePage
+
+	if repo.GitHttpUrl != "" {
+		httpUrl = repo.GitHttpUrl
+	}
+	if repo.Url != "" {
+		httpUrl = repo.Url
+	}
+
+	if sshUrl == "" {
+		sshUrl = repo.GitSshUrl
+	}
+
+	if homePage == "" {
+		homePage = repo.WebUrl
+	}
+
+	namespace := repo.Name
+	if namespace == "" {
+		// TODO(xinnjie) namespace may be empty, namespace can be retrieved from url
+	}
+
 	return &scm.Repository{
-		ID:        strconv.Itoa(from.ProjectID),
-		Namespace: "", // TODO(xinnjie) namespace can be retrieved from url
+		ID:        strconv.Itoa(projectID),
+		Namespace: namespace,
 		Name:      repo.Name,
-		FullName:  "",    // TODO(xinnjie)
+		FullName:  fmt.Sprintf("%v/%v", repo.Namespace, repo.Name),
 		Perm:      nil,   // TODO(xinnjie) need query repo info
 		Branch:    "",    // TODO
 		Private:   false, // TODO
 		Archived:  false, // TODO
-		Clone:     repo.GitHTTPURL,
-		CloneSSH:  repo.GitSSHURL,
-		Link:      repo.Homepage,
+		Clone:     httpUrl,
+		CloneSSH:  sshUrl,
+		Link:      homePage,
 		Created:   time.Time{}, // TODO
 		Updated:   time.Time{}, // TODO
 	}
 }
 
 func convertPushHook(src *pushHook) *scm.PushHook {
-	repo := *convertRepositoryHook(src)
+	repo := src.Repository.ToScmRepository(src.ProjectID)
 	dst := &scm.PushHook{
 		Ref:   scm.ExpandRef(src.Ref, "refs/heads/"),
-		Repo:  repo,
+		Repo:  *repo,
 		After: src.After,
 		Commit: scm.Commit{
 			Sha:     src.CheckoutSha,
 			Message: "", // NOTE this is set below
 			Author: scm.Signature{
-				Login: src.UserUsername,
+				Login: src.UserName,
 				Name:  src.UserName,
 				Email: src.UserEmail,
 			},
 			Committer: scm.Signature{
-				Login: src.UserUsername,
+				Login: src.UserName,
 				Name:  src.UserName,
 				Email: src.UserEmail,
 			},
 			Link: "", // NOTE this is set below
 		},
 		Sender: scm.User{
-			Login: src.UserUsername,
+			Login: src.UserName,
 			Name:  src.UserName,
 			Email: src.UserEmail,
 		},
@@ -211,7 +234,7 @@ func converBranchHook(src *pushHook) *scm.BranchHook {
 		action = scm.ActionDelete
 		commit = src.Before
 	}
-	repo := *convertRepositoryHook(&src.Project)
+	repo := *src.Repository.ToScmRepository(src.ProjectID)
 	return &scm.BranchHook{
 		Action: action,
 		Ref: scm.Reference{
@@ -220,10 +243,9 @@ func converBranchHook(src *pushHook) *scm.BranchHook {
 		},
 		Repo: repo,
 		Sender: scm.User{
-			Login:  src.UserUsername,
-			Name:   src.UserName,
-			Email:  src.UserEmail,
-			Avatar: src.UserAvatar,
+			Login: src.UserName,
+			Name:  src.UserName,
+			Email: src.UserEmail,
 		},
 	}
 }
@@ -235,7 +257,7 @@ func convertTagHook(src *pushHook) *scm.TagHook {
 		action = scm.ActionDelete
 		commit = src.Before
 	}
-	repo := *convertRepositoryHook(&src.Project)
+	repo := *src.Repository.ToScmRepository(src.ProjectID)
 	return &scm.TagHook{
 		Action: action,
 		Ref: scm.Reference{
@@ -244,10 +266,9 @@ func convertTagHook(src *pushHook) *scm.TagHook {
 		},
 		Repo: repo,
 		Sender: scm.User{
-			Login:  src.UserUsername,
-			Name:   src.UserName,
-			Email:  src.UserEmail,
-			Avatar: src.UserAvatar,
+			Login: src.UserName,
+			Name:  src.UserName,
+			Email: src.UserEmail,
 		},
 	}
 }
@@ -270,9 +291,10 @@ func convertPullRequestHook(src *pullRequestHook) *scm.PullRequestHook {
 		src.ObjectAttributes.Source.Namespace,
 		src.ObjectAttributes.Source.Name,
 	)
-	repo := *convertRepositoryHook(&src.Project)
 	ref := fmt.Sprintf("refs/merge-requests/%d/head", src.ObjectAttributes.Iid)
 	sha := src.ObjectAttributes.LastCommit.ID
+	srcRepo := *src.ObjectAttributes.Source.ToScmRepository(src.ObjectAttributes.SourceProjectID)
+	targetRepo := *src.ObjectAttributes.Target.ToScmRepository(src.ObjectAttributes.TargetProjectID)
 	pr := scm.PullRequest{
 		Number: src.ObjectAttributes.Iid,
 		Title:  src.ObjectAttributes.Title,
@@ -281,20 +303,22 @@ func convertPullRequestHook(src *pullRequestHook) *scm.PullRequestHook {
 		Sha:    sha,
 		Ref:    ref,
 		Base: scm.PullRequestBranch{
-			Ref: repo.Branch,
+			Ref:  src.ObjectAttributes.TargetBranch,
+			Repo: targetRepo,
 		},
 		Head: scm.PullRequestBranch{
-			Sha: sha,
+			Sha:  sha,
+			Ref:  src.ObjectAttributes.SourceBranch,
+			Repo: srcRepo,
 		},
-		Source:   src.ObjectAttributes.SourceBranch,
-		Target:   src.ObjectAttributes.TargetBranch,
-		Fork:     fork,
-		Link:     src.ObjectAttributes.URL,
-		Closed:   src.ObjectAttributes.State != "opened",
-		Merged:   src.ObjectAttributes.State == "merged",
-		MergeSha: src.ObjectAttributes.MergeCommitSha,
-		// Created   : src.ObjectAttributes.CreatedAt,
-		// Updated  : src.ObjectAttributes.UpdatedAt, // 2017-12-10 17:01:11 UTC
+		Source:  src.ObjectAttributes.SourceBranch,
+		Target:  src.ObjectAttributes.TargetBranch,
+		Fork:    fork,
+		Link:    src.ObjectAttributes.URL,
+		Closed:  src.ObjectAttributes.State != "opened",
+		Merged:  src.ObjectAttributes.State == "merged",
+		Created: src.ObjectAttributes.CreatedAt,
+		Updated: src.ObjectAttributes.UpdatedAt, // 2017-12-10 17:01:11 UTC
 		Author: scm.User{
 			Login:  src.User.Username,
 			Name:   src.User.Name,
@@ -302,26 +326,15 @@ func convertPullRequestHook(src *pullRequestHook) *scm.PullRequestHook {
 			Avatar: src.User.AvatarURL,
 		},
 	}
-	pr.Base.Repo = *convertRepositoryHook(src.ObjectAttributes.Target)
-	pr.Head.Repo = *convertRepositoryHook(src.ObjectAttributes.Source)
-	changes := scm.PullRequestHookChanges{
-		Base: scm.PullRequestHookBranch{
-			Sha: scm.PullRequestHookBranchFrom{
-				From: src.ObjectAttributes.OldRev,
-			},
-		},
-	}
 	return &scm.PullRequestHook{
 		Action:      action,
 		PullRequest: pr,
-		Repo:        repo,
 		Sender: scm.User{
 			Login:  src.User.Username,
 			Name:   src.User.Name,
 			Email:  "", // TODO how do we get the pull request author email?
 			Avatar: src.User.AvatarURL,
 		},
-		Changes: changes,
 	}
 }
 
@@ -331,7 +344,8 @@ func convertIssueCommentHook(s *webhookService, src *commentHook) (*scm.IssueCom
 		return nil, fmt.Errorf("unable to find comment author %w", err)
 	}
 
-	repo := *convertRepositoryHook(&src.Project)
+	repo :=
+		*src.Repository.ToScmRepository(src.ProjectID)
 	createdAt, _ := time.Parse("2006-01-02 15:04:05 MST", src.ObjectAttributes.CreatedAt)
 	updatedAt, _ := time.Parse("2006-01-02 15:04:05 MST", src.ObjectAttributes.UpdatedAt)
 
@@ -413,8 +427,8 @@ func convertMergeRequestCommentHook(s *webhookService, src *commentHook) (*scm.P
 		Updated: prUpdatedAt, // 2017-12-10 17:01:11 UTC
 		Author:  *mrAuthor,
 	}
-	pr.Base.Repo = *convertRepositoryHook(src.MergeRequest.Target)
-	pr.Head.Repo = *convertRepositoryHook(src.MergeRequest.Source)
+	pr.Base.Repo = *convertRepositoryFromProject(src.MergeRequest.Target)
+	pr.Head.Repo = *convertRepositoryFromProject(src.MergeRequest.Source)
 
 	createdAt, _ := time.Parse("2006-01-02 15:04:05 MST", src.ObjectAttributes.CreatedAt)
 	updatedAt, _ := time.Parse("2006-01-02 15:04:05 MST", src.ObjectAttributes.UpdatedAt)
@@ -447,7 +461,7 @@ func convertReleaseHook(from *releaseHook) (*scm.ReleaseHook, error) {
 
 	return &scm.ReleaseHook{
 		Action: convertAction(from.Action),
-		Repo:   *convertRepositoryHook(&from.Project),
+		Repo:   *convertRepositoryFromProject(&from.Project),
 		Release: scm.Release{
 			ID:          from.ID,
 			Title:       from.Name,
@@ -485,7 +499,6 @@ type (
 		Message       interface{} `json:"message"`
 		UserID        int         `json:"user_id"`
 		UserName      string      `json:"user_name"`
-		UserUsername  string      `json:"user_username"`
 		UserEmail     string      `json:"user_email"`
 		ProjectID     int         `json:"project_id"`
 		Commits       []struct {
@@ -501,18 +514,22 @@ type (
 			Modified []interface{} `json:"modified"`
 			Removed  []interface{} `json:"removed"`
 		} `json:"commits"`
-		TotalCommitsCount int `json:"total_commits_count"`
-		Repository        struct {
-			Name            string `json:"name"`
-			URL             string `json:"url"`
-			Description     string `json:"description"`
-			Homepage        string `json:"homepage"`
-			GitHTTPURL      string `json:"git_http_url"`
-			GitSSHURL       string `json:"git_ssh_url"`
-			VisibilityLevel int    `json:"visibility_level"`
-		} `json:"repository"`
+		TotalCommitsCount int  `json:"total_commits_count"`
+		Repository        repo `json:"repository"`
 	}
-
+	repo struct {
+		Name            string `json:"name"`
+		Description     string `json:"description"`
+		Namespace       string `json:"namespace"` // maybe empty
+		VisibilityLevel int    `json:"visibility_level"`
+		WebUrl          string `json:"web_url"`
+		SshUrl          string `json:"ssh_url"`
+		HttpUrl         string `json:"http_url"`
+		HomePage        string `json:"home_page"`    // same as WebUrl, for compatibility
+		GitHttpUrl      string `json:"git_http_url"` // same as HttpUrl, for compatibility
+		GitSshUrl       string `json:"git_ssh_url"`  // same as SshUrl, for compatibility
+		Url             string `json:"url"`          // same as HttpUrl, for compatibility
+	}
 	commentHook struct {
 		ObjectKind string `json:"object_kind"`
 		User       struct {
@@ -574,12 +591,7 @@ type (
 			URL            string      `json:"url"`
 			Action         string      `json:"action"`
 		} `json:"object_attributes"`
-		Repository struct {
-			Name        string `json:"name"`
-			URL         string `json:"url"`
-			Description string `json:"description"`
-			Homepage    string `json:"homepage"`
-		} `json:"repository"`
+		Repository   repo `json:"repository"`
 		MergeRequest struct {
 			AssigneeID     interface{} `json:"assignee_id"`
 			AuthorID       int         `json:"author_id"`
@@ -610,8 +622,8 @@ type (
 			UpdatedAt                 string      `json:"updated_at"`
 			UpdatedByID               interface{} `json:"updated_by_id"`
 			URL                       string      `json:"url"`
-			Source                    *project    `json:"source"`
-			Target                    *project    `json:"target"`
+			Source                    *repo       `json:"source"`
+			Target                    *repo       `json:"target"`
 			LastCommit                struct {
 				ID        string `json:"id"`
 				Message   string `json:"message"`
@@ -701,7 +713,7 @@ type (
 			AvatarURL string `json:"avatar_url"`
 			Email     string `json:"email"`
 		} `json:"user"`
-		Project          project `json:"project"`
+		Project          repo `json:"repo"`
 		ObjectAttributes struct {
 			AssigneeID          interface{}   `json:"assignee_id"`
 			AuthorID            int           `json:"author_id"`
@@ -770,46 +782,31 @@ type (
 	}
 
 	pullRequestHook struct {
-		ObjectKind string `json:"object_kind"`
+		ObjectKind string `json:"object_kind"` // "merge_request"
 		User       struct {
 			Name      string `json:"name"`
 			Username  string `json:"username"`
 			AvatarURL string `json:"avatar_url"`
 		} `json:"user"`
-		Project          project `json:"project"`
 		ObjectAttributes struct {
-			AssigneeID     interface{} `json:"assignee_id"`
-			AuthorID       int         `json:"author_id"`
-			CreatedAt      string      `json:"created_at"`
-			DeletedAt      interface{} `json:"deleted_at"`
-			Description    string      `json:"description"`
-			HeadPipelineID interface{} `json:"head_pipeline_id"`
-			ID             int         `json:"id"`
-			Iid            int         `json:"iid"`
-			LastEditedAt   interface{} `json:"last_edited_at"`
-			LastEditedByID interface{} `json:"last_edited_by_id"`
-			MergeCommitSha string      `json:"merge_commit_sha"`
-			MergeError     interface{} `json:"merge_error"`
-			MergeParams    struct {
-				ForceRemoveSourceBranch string `json:"force_remove_source_branch"`
-			} `json:"merge_params"`
-			MergeStatus               string      `json:"merge_status"`
-			MergeUserID               interface{} `json:"merge_user_id"`
-			MergeWhenPipelineSucceeds bool        `json:"merge_when_pipeline_succeeds"`
-			MilestoneID               interface{} `json:"milestone_id"`
-			SourceBranch              string      `json:"source_branch"`
-			SourceProjectID           int         `json:"source_project_id"`
-			State                     string      `json:"state"`
-			TargetBranch              string      `json:"target_branch"`
-			TargetProjectID           int         `json:"target_project_id"`
-			TimeEstimate              int         `json:"time_estimate"`
-			Title                     string      `json:"title"`
-			UpdatedAt                 string      `json:"updated_at"`
-			UpdatedByID               interface{} `json:"updated_by_id"`
-			URL                       string      `json:"url"`
-			Source                    *project    `json:"source"`
-			Target                    *project    `json:"target"`
-			LastCommit                struct {
+			ID              int         `json:"id"`
+			Iid             int         `json:"iid"`
+			TargetBranch    string      `json:"target_branch"`
+			SourceBranch    string      `json:"source_branch"`
+			SourceProjectID int         `json:"source_project_id"`
+			AssigneeID      int         `json:"assignee_id"`
+			AuthorID        int         `json:"author_id"`
+			Title           string      `json:"title"`
+			CreatedAt       time.Time   `json:"created_at"` // "2018-03-13T09:51:06+0000"
+			UpdatedAt       time.Time   `json:"updated_at"`
+			Description     string      `json:"description"`
+			MilestoneID     interface{} `json:"milestone_id"`
+			State           string      `json:"state"`
+			TargetProjectID int         `json:"target_project_id"`
+			URL             string      `json:"url"`
+			Source          *repo       `json:"source"`
+			Target          *repo       `json:"target"`
+			LastCommit      struct {
 				ID        string `json:"id"`
 				Message   string `json:"message"`
 				Timestamp string `json:"timestamp"`
@@ -819,35 +816,21 @@ type (
 					Email string `json:"email"`
 				} `json:"author"`
 			} `json:"last_commit"`
-			WorkInProgress      bool        `json:"work_in_progress"`
-			TotalTimeSpent      int         `json:"total_time_spent"`
-			HumanTotalTimeSpent interface{} `json:"human_total_time_spent"`
-			HumanTimeEstimate   interface{} `json:"human_time_estimate"`
-			Action              string      `json:"action"`
-			OldRev              string      `json:"oldrev"`
+			Action string `json:"action"`
 		} `json:"object_attributes"`
-		Labels  []interface{} `json:"labels"`
-		Changes struct {
-		} `json:"changes"`
-		Repository struct {
-			Name        string `json:"name"`
-			URL         string `json:"url"`
-			Description string `json:"description"`
-			Homepage    string `json:"homepage"`
-		} `json:"repository"`
 	}
 
 	releaseHook struct {
-		ID          int     `json:"id"`
-		CreatedAt   string  `json:"created_at"`
-		Description string  `json:"description"`
-		Name        string  `json:"name"`
-		ReleasedAt  string  `json:"released_at"`
-		Tag         string  `json:"tag"`
-		ObjectKind  string  `json:"object_kind"`
-		Project     project `json:"project"`
-		URL         string  `json:"url"`
-		Action      string  `json:"action"`
+		ID          int    `json:"id"`
+		CreatedAt   string `json:"created_at"`
+		Description string `json:"description"`
+		Name        string `json:"name"`
+		ReleasedAt  string `json:"released_at"`
+		Tag         string `json:"tag"`
+		ObjectKind  string `json:"object_kind"`
+		Project     repo   `json:"repo"`
+		URL         string `json:"url"`
+		Action      string `json:"action"`
 		Assets      struct {
 			Count int `json:"count"`
 			Links []struct {
@@ -873,5 +856,14 @@ type (
 				Email string `json:"email"`
 			} `json:"author"`
 		} `json:"commit"`
+	}
+	Repo struct {
+		Name            string `json:"name"`
+		Description     string `json:"description"`
+		WebURL          string `json:"web_url"`
+		Namespace       string `json:"namespace"`
+		VisibilityLevel int    `json:"visibility_level"`
+		SSHURL          string `json:"ssh_url"`
+		HTTPURL         string `json:"http_url"`
 	}
 )
