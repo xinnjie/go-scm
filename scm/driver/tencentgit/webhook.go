@@ -48,8 +48,6 @@ func (s *webhookService) Parse(req *http.Request, fn scm.SecretFunc) (scm.Webhoo
 		hook, err = parsePullRequestHook(data)
 	case "Note Hook":
 		hook, err = parseCommentHook(s, data)
-	case "Release Hook":
-		hook, err = parseReleaseHook(s, data)
 	default:
 		return nil, scm.UnknownWebhook{Event: event}
 	}
@@ -141,15 +139,6 @@ func parseCommentHook(s *webhookService, data []byte) (scm.Webhook, error) {
 	}
 }
 
-func parseReleaseHook(s *webhookService, data []byte) (scm.Webhook, error) {
-	src := new(releaseHook)
-	err := json.Unmarshal(data, src)
-	if err != nil {
-		return nil, err
-	}
-	return convertReleaseHook(src)
-}
-
 func (repo *repo) ToScmRepository(projectID int) *scm.Repository {
 	httpUrl := repo.HttpUrl
 	sshUrl := repo.SshUrl
@@ -172,7 +161,7 @@ func (repo *repo) ToScmRepository(projectID int) *scm.Repository {
 
 	namespace := repo.Name
 	if namespace == "" {
-		// TODO(xinnjie) namespace may be empty, namespace can be retrieved from url
+		// TODO(xinnjie) namespace may be empty, but can be retrieved from url
 	}
 
 	return &scm.Repository{
@@ -395,7 +384,7 @@ func convertMergeRequestCommentHook(s *webhookService, src *commentHook) (*scm.P
 		src.MergeRequest.Source.Name,
 	)
 
-	repo := *convertRepositoryHook(&src.Project)
+	repo := *src.Repository.ToScmRepository(src.ProjectID)
 
 	ref := fmt.Sprintf("refs/merge-requests/%d/head", src.MergeRequest.Iid)
 	sha := src.MergeRequest.LastCommit.ID
@@ -427,8 +416,9 @@ func convertMergeRequestCommentHook(s *webhookService, src *commentHook) (*scm.P
 		Updated: prUpdatedAt, // 2017-12-10 17:01:11 UTC
 		Author:  *mrAuthor,
 	}
-	pr.Base.Repo = *convertRepositoryFromProject(src.MergeRequest.Target)
-	pr.Head.Repo = *convertRepositoryFromProject(src.MergeRequest.Source)
+
+	pr.Base.Repo = *src.MergeRequest.Target.ToScmRepository(src.MergeRequest.TargetProjectID)
+	pr.Head.Repo = *src.MergeRequest.Source.ToScmRepository(src.MergeRequest.SourceProjectID)
 
 	createdAt, _ := time.Parse("2006-01-02 15:04:05 MST", src.ObjectAttributes.CreatedAt)
 	updatedAt, _ := time.Parse("2006-01-02 15:04:05 MST", src.ObjectAttributes.UpdatedAt)
@@ -447,32 +437,6 @@ func convertMergeRequestCommentHook(s *webhookService, src *commentHook) (*scm.P
 		Sender: *commentAuthor,
 	}
 	return hook, nil
-}
-
-func convertReleaseHook(from *releaseHook) (*scm.ReleaseHook, error) {
-	created, err := time.Parse("2006-01-02 15:04:05 MST", from.CreatedAt)
-	if err != nil {
-		return nil, err
-	}
-	released, err := time.Parse("2006-01-02 15:04:05 MST", from.ReleasedAt)
-	if err != nil {
-		return nil, err
-	}
-
-	return &scm.ReleaseHook{
-		Action: convertAction(from.Action),
-		Repo:   *convertRepositoryFromProject(&from.Project),
-		Release: scm.Release{
-			ID:          from.ID,
-			Title:       from.Name,
-			Description: from.Description,
-			Link:        from.URL,
-			Tag:         from.Tag,
-			Commitish:   from.Commit.ID,
-			Created:     created,
-			Published:   released,
-		},
-	}, nil
 }
 
 func convertAction(src string) (action scm.Action) {
@@ -856,14 +820,5 @@ type (
 				Email string `json:"email"`
 			} `json:"author"`
 		} `json:"commit"`
-	}
-	Repo struct {
-		Name            string `json:"name"`
-		Description     string `json:"description"`
-		WebURL          string `json:"web_url"`
-		Namespace       string `json:"namespace"`
-		VisibilityLevel int    `json:"visibility_level"`
-		SSHURL          string `json:"ssh_url"`
-		HTTPURL         string `json:"http_url"`
 	}
 )
