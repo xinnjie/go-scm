@@ -8,13 +8,12 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"github.com/jenkins-x/go-scm/scm"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
 	"testing"
-
-	"github.com/jenkins-x/go-scm/scm"
 
 	"github.com/google/go-cmp/cmp"
 )
@@ -73,20 +72,6 @@ func TestWebhooks(t *testing.T) {
 			obj:    new(scm.PushHook),
 		},
 		{
-			event:  "Push Hook",
-			before: "testdata/webhooks/push2.json",
-			after:  "testdata/webhooks/push2.json.golden",
-			obj:    new(scm.PushHook),
-		},
-		// // issue hooks
-		// {
-		// 	event:  "issues",
-		// 	before: "testdata/webhooks/issues_opened.json",
-		// 	after:  "testdata/webhooks/issues_opened.json.golden",
-		// 	obj:    new(scm.IssueHook),
-		// },
-		// issue comment hooks
-		{
 			event:  "Note Hook",
 			before: "testdata/webhooks/issue_comment_create.json",
 			after:  "testdata/webhooks/issue_comment_create.json.golden",
@@ -116,12 +101,6 @@ func TestWebhooks(t *testing.T) {
 			after:  "testdata/webhooks/pull_request_edited.json.golden",
 			obj:    new(scm.PullRequestHook),
 		},
-		// {
-		// 	event:  "Merge Request Hook",
-		// 	before: "testdata/webhooks/pull_request_synchronized.json",
-		// 	after:  "testdata/webhooks/pull_request_synchronized.json.golden",
-		// 	obj:    new(scm.PullRequestHook),
-		// },
 		{
 			event:  "Merge Request Hook",
 			before: "testdata/webhooks/pull_request_close.json",
@@ -182,8 +161,8 @@ func TestWebhooks(t *testing.T) {
 
 			buf := bytes.NewBuffer(before)
 			r, _ := http.NewRequest("GET", "/", buf)
-			r.Header.Set("X-Gitlab-Event", test.event)
-			r.Header.Set("X-Gitlab-Token", "9edf3260d727e29d906bdb10c8a099a")
+			r.Header.Set("X-Event", test.event)
+			r.Header.Set("X-Token", "9edf3260d727e29d906bdb10c8a099a")
 			r.Header.Set("X-Request-Id", "ee8d97b4-1479-43f1-9cac-fbbd1b80da55")
 
 			s := new(webhookService)

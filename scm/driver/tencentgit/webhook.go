@@ -12,7 +12,9 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/jenkins-x/go-scm/scm"
@@ -147,9 +149,6 @@ func (repo *repo) ToScmRepository(projectID int) *scm.Repository {
 	if repo.GitHttpUrl != "" {
 		httpUrl = repo.GitHttpUrl
 	}
-	if repo.Url != "" {
-		httpUrl = repo.Url
-	}
 
 	if sshUrl == "" {
 		sshUrl = repo.GitSshUrl
@@ -159,16 +158,20 @@ func (repo *repo) ToScmRepository(projectID int) *scm.Repository {
 		homePage = repo.WebUrl
 	}
 
-	namespace := repo.Name
+	namespace := repo.Namespace
 	if namespace == "" {
-		// TODO(xinnjie) namespace may be empty, but can be retrieved from url
+		nameWithNameSpaceRegex := regexp.MustCompile("[\\w|-]+\\/[\\w|-]+$")
+		nameWithNameSpace := nameWithNameSpaceRegex.FindString(homePage)
+		if nameWithNameSpace != "" {
+			namespace = strings.Split(nameWithNameSpace, "/")[0]
+		}
 	}
 
 	return &scm.Repository{
 		ID:        strconv.Itoa(projectID),
 		Namespace: namespace,
 		Name:      repo.Name,
-		FullName:  fmt.Sprintf("%v/%v", repo.Namespace, repo.Name),
+		FullName:  fmt.Sprintf("%v/%v", namespace, repo.Name),
 		Perm:      nil,   // TODO(xinnjie) need query repo info
 		Branch:    "",    // TODO
 		Private:   false, // TODO
@@ -188,7 +191,7 @@ func convertPushHook(src *pushHook) *scm.PushHook {
 		Repo:  *repo,
 		After: src.After,
 		Commit: scm.Commit{
-			Sha:     src.CheckoutSha,
+			Sha:     "", // NOTE this is set below
 			Message: "", // NOTE this is set below
 			Author: scm.Signature{
 				Login: src.UserName,
@@ -212,7 +215,15 @@ func convertPushHook(src *pushHook) *scm.PushHook {
 		// get the last commit (most recent)
 		dst.Commit.Message = src.Commits[len(src.Commits)-1].Message
 		dst.Commit.Link = src.Commits[len(src.Commits)-1].URL
+		dst.Commit.Sha = src.Commits[len(src.Commits)-1].ID
+		author := src.Commits[len(src.Commits)-1].Author
+		dst.Commit.Author = scm.Signature{
+			Name:  author.Name,
+			Email: author.Email,
+			Login: author.Name,
+		}
 	}
+	// TODO(xinnjie) set dst.Commits
 	return dst
 }
 
@@ -284,6 +295,9 @@ func convertPullRequestHook(src *pullRequestHook) *scm.PullRequestHook {
 	sha := src.ObjectAttributes.LastCommit.ID
 	srcRepo := *src.ObjectAttributes.Source.ToScmRepository(src.ObjectAttributes.SourceProjectID)
 	targetRepo := *src.ObjectAttributes.Target.ToScmRepository(src.ObjectAttributes.TargetProjectID)
+	createAt, _ := time.Parse(timeFormat, src.ObjectAttributes.CreatedAt)
+	updateAt, _ := time.Parse(timeFormat, src.ObjectAttributes.UpdatedAt)
+
 	pr := scm.PullRequest{
 		Number: src.ObjectAttributes.Iid,
 		Title:  src.ObjectAttributes.Title,
@@ -306,8 +320,8 @@ func convertPullRequestHook(src *pullRequestHook) *scm.PullRequestHook {
 		Link:    src.ObjectAttributes.URL,
 		Closed:  src.ObjectAttributes.State != "opened",
 		Merged:  src.ObjectAttributes.State == "merged",
-		Created: src.ObjectAttributes.CreatedAt,
-		Updated: src.ObjectAttributes.UpdatedAt, // 2017-12-10 17:01:11 UTC
+		Created: createAt,
+		Updated: updateAt,
 		Author: scm.User{
 			Login:  src.User.Username,
 			Name:   src.User.Name,
@@ -453,18 +467,16 @@ func convertAction(src string) (action scm.Action) {
 type (
 	//doc at https://git.woa.com/help/menu/manual/webhooks.html#推送事件
 	pushHook struct {
-		ObjectKind    string      `json:"object_kind"`
-		OperationKind string      `json:"operation_kind"`
-		ActionKind    string      `json:"action_kind"`
-		Before        string      `json:"before"`
-		After         string      `json:"after"`
-		Ref           string      `json:"ref"`
-		CheckoutSha   string      `json:"checkout_sha"`
-		Message       interface{} `json:"message"`
-		UserID        int         `json:"user_id"`
-		UserName      string      `json:"user_name"`
-		UserEmail     string      `json:"user_email"`
-		ProjectID     int         `json:"project_id"`
+		ObjectKind    string `json:"object_kind"`
+		OperationKind string `json:"operation_kind"`
+		ActionKind    string `json:"action_kind"`
+		Before        string `json:"before"`
+		After         string `json:"after"`
+		Ref           string `json:"ref"`
+		UserID        int    `json:"user_id"`
+		UserName      string `json:"user_name"`
+		UserEmail     string `json:"user_email"`
+		ProjectID     int    `json:"project_id"`
 		Commits       []struct {
 			ID        string `json:"id"`
 			Message   string `json:"message"`
@@ -489,7 +501,7 @@ type (
 		WebUrl          string `json:"web_url"`
 		SshUrl          string `json:"ssh_url"`
 		HttpUrl         string `json:"http_url"`
-		HomePage        string `json:"home_page"`    // same as WebUrl, for compatibility
+		HomePage        string `json:"homepage"`     // same as WebUrl, for compatibility
 		GitHttpUrl      string `json:"git_http_url"` // same as HttpUrl, for compatibility
 		GitSshUrl       string `json:"git_ssh_url"`  // same as SshUrl, for compatibility
 		Url             string `json:"url"`          // same as HttpUrl, for compatibility
@@ -761,8 +773,8 @@ type (
 			AssigneeID      int         `json:"assignee_id"`
 			AuthorID        int         `json:"author_id"`
 			Title           string      `json:"title"`
-			CreatedAt       time.Time   `json:"created_at"` // "2018-03-13T09:51:06+0000"
-			UpdatedAt       time.Time   `json:"updated_at"`
+			CreatedAt       string      `json:"created_at"` // "2018-03-13T09:51:06+0000"
+			UpdatedAt       string      `json:"updated_at"`
 			Description     string      `json:"description"`
 			MilestoneID     interface{} `json:"milestone_id"`
 			State           string      `json:"state"`
