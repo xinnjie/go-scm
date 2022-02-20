@@ -18,6 +18,7 @@ import (
 	"time"
 
 	"github.com/jenkins-x/go-scm/scm"
+	"github.com/sirupsen/logrus"
 )
 
 type webhookService struct {
@@ -41,6 +42,13 @@ func (s *webhookService) Parse(req *http.Request, fn scm.SecretFunc) (scm.Webhoo
 
 	var hook scm.Webhook
 	event := req.Header.Get("X-Event")
+
+	log := logrus.WithFields(map[string]interface{}{
+		"URL":     req.URL,
+		"Headers": req.Header,
+		"Body":    string(data),
+	})
+	log.Infof("received webhook")
 	switch event {
 	case "Push Hook", "Tag Push Hook":
 		hook, err = parsePushHook(data)

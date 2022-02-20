@@ -1,64 +1,38 @@
 {
   "object_kind": "tag_push",
-  "event_name": "tag_push",
-  "before": "0000000000000000000000000000000000000000",
-  "after": "2adc9465c4edfc33834e173fe89436a7cb899a1d",
-  "ref": "refs/tags/v1.0.0",
-  "checkout_sha": "2adc9465c4edfc33834e173fe89436a7cb899a1d",
-  "message": null,
-  "user_id": 51764,
-  "user_name": "Sid Sijbrandij",
-  "user_username": "sytses",
-  "user_email": "noreply@gitlab.com",
-  "user_avatar": "https://secure.gravatar.com/avatar/8c58a0be77ee441bb8f8595b7f1b4e87?s=80&d=identicon",
-  "project_id": 4861503,
-  "project": {
-    "id": 4861503,
-    "name": "hello-world",
+  "operation_kind": "create",
+  "ref": "refs/tags/v1.0.2",
+  "before": "1480a4610ca01dd10cb5bc3359a1b1ea568c09a1",
+  "after": "b96850262fabfa9a1d9d28fff9040621958379f9",
+  "user_id": 11323,
+  "user_name": "git_user1",
+  "project_id": 11452,
+  "repository": {
+    "name": "tencent",
+    "url": "ssh://git@tencent.com/z-413/tencent.git",
     "description": "",
-    "web_url": "https://gitlab.com/gitlab-org/hello-world",
-    "avatar_url": null,
-    "git_ssh_url": "git@gitlab.com:gitlab-org/hello-world.git",
-    "git_http_url": "https://gitlab.com/gitlab-org/hello-world.git",
-    "namespace": "sytses",
-    "visibility_level": 0,
-    "path_with_namespace": "gitlab-org/hello-world",
-    "default_branch": "master",
-    "ci_config_path": null,
-    "homepage": "https://gitlab.com/gitlab-org/hello-world",
-    "url": "git@gitlab.com:gitlab-org/hello-world.git",
-    "ssh_url": "git@gitlab.com:gitlab-org/hello-world.git",
-    "http_url": "https://gitlab.com/gitlab-org/hello-world.git"
+    "homepage": "https://tencent.com/z-413/tencent",
+    "git_http_url":"http://tencent.com/z-413/tencent.git",
+    "git_ssh_url":"git@tencent.com:z-413/tencent.git",
+    "visibility_level":0
   },
-  "commits": [
+  "commits":[
     {
-      "id": "2adc9465c4edfc33834e173fe89436a7cb899a1d",
-      "message": "added readme\n",
-      "timestamp": "2017-12-10T08:26:38-08:00",
-      "url": "https://gitlab.com/gitlab-org/hello-world/commit/2adc9465c4edfc33834e173fe89436a7cb899a1d",
-      "author": {
-        "name": "Sid Sijbrandij",
-        "email": "noreply@gitlab.com"
+      "id":"458ce39e1a28572597979ca6c7cdc6c338f6bd43",
+      "message":"update",
+      "timestamp":"2019-03-28T02:14:59+0000",
+      "url":"https://git.example.tencent.com/release-test/xxx-framework/commit/458ce39e1a28572597979ca6c7cdc6c338f6bd43",
+      "author":{
+        "name":"xuhaohe",
+        "email":"xuhaohe@tencent.com"
       },
-      "added": [
+      "added":[],
+      "modified":[
         "README.md"
       ],
-      "modified": [
-        
-      ],
-      "removed": [
-        
-      ]
+      "removed":[]
     }
   ],
-  "total_commits_count": 1,
-  "repository": {
-    "name": "hello-world",
-    "url": "git@gitlab.com:gitlab-org/hello-world.git",
-    "description": "",
-    "homepage": "https://gitlab.com/gitlab-org/hello-world",
-    "git_http_url": "https://gitlab.com/gitlab-org/hello-world.git",
-    "git_ssh_url": "git@gitlab.com:gitlab-org/hello-world.git",
-    "visibility_level": 0
-  }
+  "total_commits_count":1,
+  "create_from":"master"
 }
