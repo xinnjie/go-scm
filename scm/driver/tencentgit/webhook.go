@@ -155,6 +155,10 @@ func (repo *repo) ToScmRepository(projectID int) *scm.Repository {
 		httpUrl = repo.GitHttpUrl
 	}
 
+	if httpUrl == "" {
+		httpUrl = repo.Url
+	}
+
 	if sshUrl == "" {
 		sshUrl = repo.GitSshUrl
 	}
@@ -353,16 +357,21 @@ func convertIssueCommentHook(s *webhookService, src *commentHook) (*scm.IssueCom
 		return nil, fmt.Errorf("unable to find comment author %w", err)
 	}
 
+	issueAuthor, err := s.userService.FindLoginByID(context.TODO(), src.Issue.AuthorID)
+	if err != nil {
+		return nil, fmt.Errorf("unable to find issue author %w", err)
+	}
+
 	repo :=
 		*src.Repository.ToScmRepository(src.ProjectID)
-	createdAt, _ := time.Parse("2006-01-02 15:04:05 MST", src.ObjectAttributes.CreatedAt)
-	updatedAt, _ := time.Parse("2006-01-02 15:04:05 MST", src.ObjectAttributes.UpdatedAt)
+	createdAt, _ := time.Parse(timeFormat, src.ObjectAttributes.CreatedAt)
+	updatedAt, _ := time.Parse(timeFormat, src.ObjectAttributes.UpdatedAt)
 
 	issue := scm.Issue{
 		Number:      src.Issue.Iid,
 		Title:       src.Issue.Title,
 		Body:        src.Issue.Description,
-		Author:      *commentAuthor,
+		Author:      *issueAuthor,
 		Created:     createdAt,
 		Updated:     updatedAt,
 		Closed:      src.Issue.State != "opened",

@@ -78,12 +78,19 @@ func TestWebhooks(t *testing.T) {
 			obj:    new(scm.IssueCommentHook),
 			mockUserService: &mockUserService{
 				users: map[int]*scm.User{
-					51764: {
-						ID:     51764,
-						Login:  "sytses",
-						Name:   "Sid Sijbrandij",
+					23: {
+						ID:     23,
+						Login:  "git_user2",
+						Name:   "git_user2",
 						Email:  "",
-						Avatar: "https://secure.gravatar.com/avatar/8c58a0be77ee441bb8f8595b7f1b4e87?s=80&d=identicon",
+						Avatar: "https://blog.bobo.com.cn/s/blog_6e572cd60101qls0.html",
+					},
+					11323: {
+						ID:     11323,
+						Login:  "issue_user",
+						Name:   "issue_user",
+						Email:  "",
+						Avatar: "https://blog.bobo.com.cn/s/blog_6e572cd60101qls0.html",
 					},
 				},
 			},
