@@ -123,10 +123,7 @@ func parsePullRequestHook(data []byte) (scm.Webhook, error) {
 	default:
 		return nil, scm.UnknownWebhook{Event: event}
 	}
-	switch {
-	default:
-		return convertPullRequestHook(src), nil
-	}
+	return convertPullRequestHook(src), nil
 }
 
 func parseCommentHook(s *webhookService, data []byte) (scm.Webhook, error) {
@@ -346,6 +343,7 @@ func convertPullRequestHook(src *pullRequestHook) *scm.PullRequestHook {
 			Email:  "", // TODO how do we get the pull request author email?
 			Avatar: src.User.AvatarURL,
 		},
+		Repo: targetRepo,
 	}
 }
 

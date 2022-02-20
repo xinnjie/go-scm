@@ -22,7 +22,7 @@
     "merge_status": "unchecked",
     "target_project_id": 14,
     "iid": 1,
-    "description": "",
+    "description": "description",
     "source": {
       "name": "rename",
       "ssh_url": "ssh://git@tencent.com/z-413/rename.git",

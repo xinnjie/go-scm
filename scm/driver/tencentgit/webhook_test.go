@@ -95,48 +95,6 @@ func TestWebhooks(t *testing.T) {
 			after:  "testdata/webhooks/pull_request_create.json.golden",
 			obj:    new(scm.PullRequestHook),
 		},
-		{
-			event:  "Merge Request Hook",
-			before: "testdata/webhooks/pull_request_edited.json",
-			after:  "testdata/webhooks/pull_request_edited.json.golden",
-			obj:    new(scm.PullRequestHook),
-		},
-		{
-			event:  "Merge Request Hook",
-			before: "testdata/webhooks/pull_request_close.json",
-			after:  "testdata/webhooks/pull_request_close.json.golden",
-			obj:    new(scm.PullRequestHook),
-		},
-		{
-			event:  "Merge Request Hook",
-			before: "testdata/webhooks/pull_request_reopen.json",
-			after:  "testdata/webhooks/pull_request_reopen.json.golden",
-			obj:    new(scm.PullRequestHook),
-		},
-		{
-			event:  "Merge Request Hook",
-			before: "testdata/webhooks/pull_request_merge.json",
-			after:  "testdata/webhooks/pull_request_merge.json.golden",
-			obj:    new(scm.PullRequestHook),
-		},
-		// pull request comment hooks
-		{
-			event:  "Note Hook",
-			before: "testdata/webhooks/pull_request_comment_create.json",
-			after:  "testdata/webhooks/pull_request_comment_create.json.golden",
-			obj:    new(scm.PullRequestCommentHook),
-			mockUserService: &mockUserService{
-				users: map[int]*scm.User{
-					51764: {
-						ID:     51764,
-						Login:  "sytses",
-						Name:   "Sid Sijbrandij",
-						Email:  "",
-						Avatar: "https://secure.gravatar.com/avatar/8c58a0be77ee441bb8f8595b7f1b4e87?s=80&d=identicon",
-					},
-				},
-			},
-		},
 		// release hooks
 		{
 			event:  "Release Hook",
