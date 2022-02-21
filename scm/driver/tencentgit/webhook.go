@@ -419,8 +419,8 @@ func convertMergeRequestCommentHook(s *webhookService, src *commentHook) (*scm.P
 	sha := src.MergeRequest.LastCommit.ID
 
 	// Mon Jan 2 15:04:05 -0700 MST 2006
-	prCreatedAt, _ := time.Parse("2006-01-02 15:04:05 MST", src.MergeRequest.CreatedAt)
-	prUpdatedAt, _ := time.Parse("2006-01-02 15:04:05 MST", src.MergeRequest.UpdatedAt)
+	prCreatedAt, _ := time.Parse(timeFormat, src.MergeRequest.CreatedAt)
+	prUpdatedAt, _ := time.Parse(timeFormat, src.MergeRequest.UpdatedAt)
 	pr := scm.PullRequest{
 		Number: src.MergeRequest.Iid,
 		Title:  src.MergeRequest.Title,
@@ -449,8 +449,8 @@ func convertMergeRequestCommentHook(s *webhookService, src *commentHook) (*scm.P
 	pr.Base.Repo = *src.MergeRequest.Target.ToScmRepository(src.MergeRequest.TargetProjectID)
 	pr.Head.Repo = *src.MergeRequest.Source.ToScmRepository(src.MergeRequest.SourceProjectID)
 
-	createdAt, _ := time.Parse("2006-01-02 15:04:05 MST", src.ObjectAttributes.CreatedAt)
-	updatedAt, _ := time.Parse("2006-01-02 15:04:05 MST", src.ObjectAttributes.UpdatedAt)
+	createdAt, _ := time.Parse(timeFormat, src.ObjectAttributes.CreatedAt)
+	updatedAt, _ := time.Parse(timeFormat, src.ObjectAttributes.UpdatedAt)
 
 	hook := &scm.PullRequestCommentHook{
 		Action:      scm.ActionCreate,

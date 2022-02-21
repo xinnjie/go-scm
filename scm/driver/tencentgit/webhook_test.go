@@ -95,6 +95,31 @@ func TestWebhooks(t *testing.T) {
 				},
 			},
 		},
+		// pull request comment hooks
+		{
+			event:  "Note Hook",
+			before: "testdata/webhooks/pull_request_comment_create.json",
+			after:  "testdata/webhooks/pull_request_comment_create.json.golden",
+			obj:    new(scm.PullRequestCommentHook),
+			mockUserService: &mockUserService{
+				users: map[int]*scm.User{
+					29: {
+						ID:     29,
+						Login:  "git_user2",
+						Name:   "git_user2",
+						Email:  "",
+						Avatar: "https://blog.bobo.com.cn/s/blog_6e572cd60101qls0.html",
+					},
+					11322: {
+						ID:     11322,
+						Login:  "mr_user",
+						Name:   "mr_user",
+						Email:  "",
+						Avatar: "https://blog.bobo.com.cn/s/blog_6e572cd60101qls0.html",
+					},
+				},
+			},
+		},
 		// pull request hooks
 		{
 			event:  "Merge Request Hook",
