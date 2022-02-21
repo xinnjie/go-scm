@@ -38,31 +38,12 @@ func TestWebhooks(t *testing.T) {
 		obj             interface{}
 		mockUserService webhookUserService
 	}{
-		// branch hooks
-		{
-			event:  "Push Hook",
-			before: "testdata/webhooks/branch_create.json",
-			after:  "testdata/webhooks/branch_create.json.golden",
-			obj:    new(scm.PushHook),
-		},
-		{
-			event:  "Push Hook",
-			before: "testdata/webhooks/branch_delete.json",
-			after:  "testdata/webhooks/branch_delete.json.golden",
-			obj:    new(scm.BranchHook),
-		},
 		// tag hooks
 		{
 			event:  "Tag Push Hook",
 			before: "testdata/webhooks/tag_create.json",
 			after:  "testdata/webhooks/tag_create.json.golden",
 			obj:    new(scm.PushHook),
-		},
-		{
-			event:  "Push Hook",
-			before: "testdata/webhooks/tag_delete.json",
-			after:  "testdata/webhooks/tag_delete.json.golden",
-			obj:    new(scm.TagHook),
 		},
 		// push hooks
 		{
@@ -126,13 +107,6 @@ func TestWebhooks(t *testing.T) {
 			before: "testdata/webhooks/pull_request_create.json",
 			after:  "testdata/webhooks/pull_request_create.json.golden",
 			obj:    new(scm.PullRequestHook),
-		},
-		// release hooks
-		{
-			event:  "Release Hook",
-			before: "testdata/webhooks/release.json",
-			after:  "testdata/webhooks/release.json.golden",
-			obj:    new(scm.ReleaseHook),
 		},
 	}
 
@@ -214,20 +188,6 @@ func TestWebhook_SignatureInvalid(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/", bytes.NewBuffer(f))
 	r.Header.Set("X-Gitlab-Event", "Push Hook")
 	r.Header.Set("X-Gitlab-Token", "void")
-	r.Header.Set("X-Request-Id", "ee8d97b4-1479-43f1-9cac-fbbd1b80da55")
-
-	s := new(webhookService)
-	_, err := s.Parse(r, secretFunc)
-	if err != scm.ErrSignatureInvalid {
-		t.Errorf("Expect invalid signature error, got %v", err)
-	}
-}
-
-func TestWebhook_SignatureMissing(t *testing.T) {
-	f, _ := ioutil.ReadFile("testdata/webhooks/branch_delete.json")
-	r, _ := http.NewRequest("GET", "/", bytes.NewBuffer(f))
-	r.Header.Set("X-Gitlab-Event", "Push Hook")
-	r.Header.Set("X-Gitlab-Token", "")
 	r.Header.Set("X-Request-Id", "ee8d97b4-1479-43f1-9cac-fbbd1b80da55")
 
 	s := new(webhookService)
