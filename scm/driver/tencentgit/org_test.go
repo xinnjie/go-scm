@@ -27,7 +27,7 @@ func TestOrganizationFind(t *testing.T) {
 		File("testdata/group.json")
 
 	client := NewDefault()
-	got, res, err := client.Organizations.Find(context.Background(), "Twitter")
+	got, _, err := client.Organizations.Find(context.Background(), "Twitter")
 	if err != nil {
 		t.Error(err)
 		return
@@ -42,8 +42,6 @@ func TestOrganizationFind(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestOrganizationList(t *testing.T) {
@@ -75,7 +73,5 @@ func TestOrganizationList(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 	t.Run("Page", testPage(res))
 }

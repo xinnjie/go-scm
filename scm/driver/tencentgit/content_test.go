@@ -30,7 +30,7 @@ func TestContentFind(t *testing.T) {
 		File("testdata/content.json")
 
 	client := NewDefault()
-	got, res, err := client.Contents.Find(
+	got, _, err := client.Contents.Find(
 		context.Background(),
 		"xinnjie/testme",
 		"app/models/key.rb",
@@ -50,8 +50,6 @@ func TestContentFind(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestContentList(t *testing.T) {
@@ -66,7 +64,7 @@ func TestContentList(t *testing.T) {
 		File("testdata/content_list.json")
 
 	client := NewDefault()
-	got, res, err := client.Contents.List(
+	got, _, err := client.Contents.List(
 		context.Background(),
 		"xinnjie/testme",
 		"app/models/key.rb",
@@ -94,8 +92,6 @@ func TestContentList(t *testing.T) {
 		}
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestContentCreate(t *testing.T) {
@@ -166,13 +162,11 @@ func TestContentUpdate(t *testing.T) {
 	}
 	client := NewDefault()
 
-	res, err := client.Contents.Update(context.Background(), "octocat/hello-world", "README", params)
+	_, err := client.Contents.Update(context.Background(), "octocat/hello-world", "README", params)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestContentDelete(t *testing.T) {

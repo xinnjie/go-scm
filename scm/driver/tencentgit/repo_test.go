@@ -45,7 +45,7 @@ func TestRepositoryCreate(t *testing.T) {
 		Private:     false,
 		Description: "",
 	}
-	got, res, err := client.Repositories.Create(context.Background(), input)
+	got, _, err := client.Repositories.Create(context.Background(), input)
 	if err != nil {
 		t.Error(err)
 		return
@@ -60,8 +60,6 @@ func TestRepositoryCreate(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestRepositoryFork(t *testing.T) {
@@ -80,7 +78,7 @@ func TestRepositoryFork(t *testing.T) {
 		Name:      "diaspora",
 		Namespace: "diaspora",
 	}
-	got, res, err := client.Repositories.Fork(context.Background(), input, "something/diaspora")
+	got, _, err := client.Repositories.Fork(context.Background(), input, "something/diaspora")
 	if err != nil {
 		t.Error(err)
 		return
@@ -95,8 +93,6 @@ func TestRepositoryFork(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestRepositoryFind(t *testing.T) {
@@ -138,7 +134,7 @@ func TestRepositoryPerms(t *testing.T) {
 		File("testdata/repo.json")
 
 	client := NewDefault()
-	perms, res, err := client.Repositories.FindPerms(context.Background(), "xinnjie/testme")
+	perms, _, err := client.Repositories.FindPerms(context.Background(), "xinnjie/testme")
 	if err != nil {
 		t.Error(err)
 		return
@@ -154,8 +150,6 @@ func TestRepositoryPerms(t *testing.T) {
 		t.Errorf("Want permission Admin %v, got %v", want, got)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestRepositoryNotFound(t *testing.T) {
@@ -209,8 +203,6 @@ func TestRepositoryList(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 	t.Run("Page", testPage(res))
 }
 
@@ -234,14 +226,12 @@ func TestAddCollaborator(t *testing.T) {
 		File("testdata/add_collaborator_user.json")
 
 	client := NewDefault()
-	_, _, res, err := client.Repositories.AddCollaborator(context.Background(), "xinnjie/testme", "john_smith", scm.WritePermission)
+	_, _, _, err := client.Repositories.AddCollaborator(context.Background(), "xinnjie/testme", "john_smith", scm.WritePermission)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestListContributor(t *testing.T) {
@@ -271,8 +261,6 @@ func TestListContributor(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 	t.Run("Page", testPage(res))
 }
 
@@ -305,8 +293,6 @@ func TestStatusList(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 	t.Run("Page", testPage(res))
 }
 
@@ -323,7 +309,7 @@ func TestCombinedStatus(t *testing.T) {
 		File("testdata/statuses.json")
 
 	client := NewDefault()
-	got, res, err := client.Repositories.FindCombinedStatus(context.Background(), "thedude/tencentgit-ce", "18f3e63d05582537db6d183d9d557be09e1f90c8")
+	got, _, err := client.Repositories.FindCombinedStatus(context.Background(), "thedude/tencentgit-ce", "18f3e63d05582537db6d183d9d557be09e1f90c8")
 	if err != nil {
 		t.Error(err)
 		return
@@ -338,8 +324,6 @@ func TestCombinedStatus(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestStatusCreate(t *testing.T) {
@@ -370,7 +354,7 @@ func TestStatusCreate(t *testing.T) {
 	}
 
 	client := NewDefault()
-	got, res, err := client.Repositories.CreateStatus(context.Background(), "xinnjie/testme", "6dcb09b5b57875f334f61aebed695e2e4193db5e", in)
+	got, _, err := client.Repositories.CreateStatus(context.Background(), "xinnjie/testme", "6dcb09b5b57875f334f61aebed695e2e4193db5e", in)
 	if err != nil {
 		t.Error(err)
 		return
@@ -385,8 +369,6 @@ func TestStatusCreate(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestRepositoryHookFind(t *testing.T) {
@@ -400,7 +382,7 @@ func TestRepositoryHookFind(t *testing.T) {
 		File("testdata/hook.json")
 
 	client := NewDefault()
-	got, res, err := client.Repositories.FindHook(context.Background(), "xinnjie/testme", "1")
+	got, _, err := client.Repositories.FindHook(context.Background(), "xinnjie/testme", "1")
 	if err != nil {
 		t.Error(err)
 		return
@@ -415,8 +397,6 @@ func TestRepositoryHookFind(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestRepositoryHookList(t *testing.T) {
@@ -448,8 +428,6 @@ func TestRepositoryHookList(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 	t.Run("Page", testPage(res))
 }
 
@@ -473,8 +451,6 @@ func TestRepositoryHookDelete(t *testing.T) {
 		t.Errorf("Want response status %d, got %d", want, got)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestRepositoryHookCreate(t *testing.T) {
@@ -498,7 +474,7 @@ func TestRepositoryHookCreate(t *testing.T) {
 	}
 
 	client := NewDefault()
-	got, res, err := client.Repositories.CreateHook(context.Background(), "xinnjie/testme", in)
+	got, _, err := client.Repositories.CreateHook(context.Background(), "xinnjie/testme", in)
 	if err != nil {
 		t.Error(err)
 		return
@@ -513,8 +489,6 @@ func TestRepositoryHookCreate(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestRepositoryHookUpdate(t *testing.T) {
@@ -534,7 +508,7 @@ func TestRepositoryHookUpdate(t *testing.T) {
 
 	client := NewDefault()
 
-	got, res, err := client.Repositories.UpdateHook(context.Background(), "xinnjie/testme", in)
+	got, _, err := client.Repositories.UpdateHook(context.Background(), "xinnjie/testme", in)
 	if err != nil {
 		t.Error(err)
 		return
@@ -549,8 +523,6 @@ func TestRepositoryHookUpdate(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestRepositoryFindUserPermission(t *testing.T) {
@@ -564,7 +536,7 @@ func TestRepositoryFindUserPermission(t *testing.T) {
 		File("testdata/contributors.json")
 
 	client := NewDefault()
-	got, res, err := client.Repositories.FindUserPermission(context.Background(), "xinnjie/testme", "raymond_smith")
+	got, _, err := client.Repositories.FindUserPermission(context.Background(), "xinnjie/testme", "raymond_smith")
 	if err != nil {
 		t.Error(err)
 		return
@@ -577,8 +549,6 @@ func TestRepositoryFindUserPermission(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestConvertState(t *testing.T) {

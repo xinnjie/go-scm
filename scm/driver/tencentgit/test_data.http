@@ -4,3 +4,7 @@ PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
 ###
 GET  https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/repository/branches/master
 PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+
+###
+GET  https://git.code.tencent.com/api/v3/user
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ

@@ -27,7 +27,7 @@ func TestIssueFind(t *testing.T) {
 		File("testdata/issue.json")
 
 	client := NewDefault()
-	got, res, err := client.Issues.Find(context.Background(), "xinnjie/testme", 1)
+	got, _, err := client.Issues.Find(context.Background(), "xinnjie/testme", 1)
 	if err != nil {
 		t.Error(err)
 		return
@@ -42,8 +42,6 @@ func TestIssueFind(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestIssueCommentFind(t *testing.T) {
@@ -57,7 +55,7 @@ func TestIssueCommentFind(t *testing.T) {
 		File("testdata/issue_note.json")
 
 	client := NewDefault()
-	got, res, err := client.Issues.FindComment(context.Background(), "xinnjie/testme", 2, 1)
+	got, _, err := client.Issues.FindComment(context.Background(), "xinnjie/testme", 2, 1)
 	if err != nil {
 		t.Error(err)
 		return
@@ -72,8 +70,6 @@ func TestIssueCommentFind(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestIssueList(t *testing.T) {
@@ -137,8 +133,6 @@ func TestIssueListComments(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 	t.Run("Page", testPage(res))
 }
 
@@ -174,8 +168,6 @@ func TestIssueListEvents(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 	t.Run("Page", testPage(res))
 }
 
@@ -195,7 +187,7 @@ func TestIssueCreate(t *testing.T) {
 	}
 
 	client := NewDefault()
-	got, res, err := client.Issues.Create(context.Background(), "xinnjie/testme", &input)
+	got, _, err := client.Issues.Create(context.Background(), "xinnjie/testme", &input)
 	if err != nil {
 		t.Error(err)
 		return
@@ -210,8 +202,6 @@ func TestIssueCreate(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestIssueCreateComment(t *testing.T) {
@@ -230,7 +220,7 @@ func TestIssueCreateComment(t *testing.T) {
 	}
 
 	client := NewDefault()
-	got, res, err := client.Issues.CreateComment(context.Background(), "xinnjie/testme", 1, input)
+	got, _, err := client.Issues.CreateComment(context.Background(), "xinnjie/testme", 1, input)
 	if err != nil {
 		t.Error(err)
 		return
@@ -245,8 +235,6 @@ func TestIssueCreateComment(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestIssueCommentDelete(t *testing.T) {
@@ -259,14 +247,12 @@ func TestIssueCommentDelete(t *testing.T) {
 		SetHeaders(mockHeaders)
 
 	client := NewDefault()
-	res, err := client.Issues.DeleteComment(context.Background(), "xinnjie/testme", 2, 1)
+	_, err := client.Issues.DeleteComment(context.Background(), "xinnjie/testme", 2, 1)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestIssueEditComment(t *testing.T) {
@@ -285,7 +271,7 @@ func TestIssueEditComment(t *testing.T) {
 	}
 
 	client := NewDefault()
-	got, res, err := client.Issues.EditComment(context.Background(), "xinnjie/testme", 2, 1, input)
+	got, _, err := client.Issues.EditComment(context.Background(), "xinnjie/testme", 2, 1, input)
 	if err != nil {
 		t.Error(err)
 		return
@@ -300,8 +286,6 @@ func TestIssueEditComment(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestIssueClose(t *testing.T) {
@@ -315,14 +299,12 @@ func TestIssueClose(t *testing.T) {
 		SetHeaders(mockHeaders)
 
 	client := NewDefault()
-	res, err := client.Issues.Close(context.Background(), "xinnjie/testme", 1)
+	_, err := client.Issues.Close(context.Background(), "xinnjie/testme", 1)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestIssueReopen(t *testing.T) {
@@ -336,14 +318,12 @@ func TestIssueReopen(t *testing.T) {
 		SetHeaders(mockHeaders)
 
 	client := NewDefault()
-	res, err := client.Issues.Reopen(context.Background(), "xinnjie/testme", 1)
+	_, err := client.Issues.Reopen(context.Background(), "xinnjie/testme", 1)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestIssueLock(t *testing.T) {
@@ -357,14 +337,12 @@ func TestIssueLock(t *testing.T) {
 		SetHeaders(mockHeaders)
 
 	client := NewDefault()
-	res, err := client.Issues.Lock(context.Background(), "xinnjie/testme", 1)
+	_, err := client.Issues.Lock(context.Background(), "xinnjie/testme", 1)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestIssueUnlock(t *testing.T) {
@@ -378,14 +356,12 @@ func TestIssueUnlock(t *testing.T) {
 		SetHeaders(mockHeaders)
 
 	client := NewDefault()
-	res, err := client.Issues.Unlock(context.Background(), "xinnjie/testme", 1)
+	_, err := client.Issues.Unlock(context.Background(), "xinnjie/testme", 1)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestIssueSetMilestone(t *testing.T) {

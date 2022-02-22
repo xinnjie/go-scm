@@ -23,7 +23,7 @@ func TestReleaseFindByTag(t *testing.T) {
 		File("testdata/release.json")
 
 	client := NewDefault()
-	got, res, err := client.Releases.FindByTag(context.Background(), "xinnjie/testme", "v1.0.1")
+	got, _, err := client.Releases.FindByTag(context.Background(), "xinnjie/testme", "v1.0.1")
 	if err != nil {
 		t.Error(err)
 		return
@@ -43,8 +43,6 @@ func TestReleaseFindByTag(t *testing.T) {
 		t.Log(string(data))
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestReleaseList(t *testing.T) {
@@ -58,7 +56,7 @@ func TestReleaseList(t *testing.T) {
 		File("testdata/releases.json")
 
 	client := NewDefault()
-	got, res, err := client.Releases.List(context.Background(), "xinnjie/testme", scm.ReleaseListOptions{})
+	got, _, err := client.Releases.List(context.Background(), "xinnjie/testme", scm.ReleaseListOptions{})
 	if err != nil {
 		t.Error(err)
 		return
@@ -78,8 +76,6 @@ func TestReleaseList(t *testing.T) {
 		t.Log(string(data))
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestReleaseCreate(t *testing.T) {
@@ -100,7 +96,7 @@ func TestReleaseCreate(t *testing.T) {
 		Tag:         "v1.0",
 	}
 
-	got, res, err := client.Releases.Create(context.Background(), "xinnjie/testme", input)
+	got, _, err := client.Releases.Create(context.Background(), "xinnjie/testme", input)
 	if err != nil {
 		t.Error(err)
 		return
@@ -120,8 +116,6 @@ func TestReleaseCreate(t *testing.T) {
 		t.Log(string(data))
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestReleaseUpdateByTag(t *testing.T) {
@@ -142,7 +136,7 @@ func TestReleaseUpdateByTag(t *testing.T) {
 		Tag:         "v1.0",
 	}
 
-	got, res, err := client.Releases.UpdateByTag(context.Background(), "xinnjie/testme", "v1.0", input)
+	got, _, err := client.Releases.UpdateByTag(context.Background(), "xinnjie/testme", "v1.0", input)
 	if err != nil {
 		t.Error(err)
 		return
@@ -158,8 +152,6 @@ func TestReleaseUpdateByTag(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestReleaseDeleteByTag(t *testing.T) {
@@ -172,12 +164,10 @@ func TestReleaseDeleteByTag(t *testing.T) {
 		SetHeaders(mockHeaders)
 
 	client := NewDefault()
-	res, err := client.Releases.DeleteByTag(context.Background(), "xinnjie/testme", "v1.0")
+	_, err := client.Releases.DeleteByTag(context.Background(), "xinnjie/testme", "v1.0")
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }

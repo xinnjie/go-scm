@@ -276,7 +276,7 @@ func TestPullCreateComment(t *testing.T) {
 	}
 
 	client := NewDefault()
-	got, res, err := client.PullRequests.CreateComment(context.Background(), "xinnjie/testme", 1, input)
+	got, _, err := client.PullRequests.CreateComment(context.Background(), "xinnjie/testme", 1, input)
 	if err != nil {
 		t.Error(err)
 		return
@@ -291,8 +291,6 @@ func TestPullCreateComment(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestPullCommentDelete(t *testing.T) {
@@ -305,14 +303,12 @@ func TestPullCommentDelete(t *testing.T) {
 		SetHeaders(mockHeaders)
 
 	client := NewDefault()
-	res, err := client.PullRequests.DeleteComment(context.Background(), "xinnjie/testme", 2, 1)
+	_, err := client.PullRequests.DeleteComment(context.Background(), "xinnjie/testme", 2, 1)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestPullEditComment(t *testing.T) {
@@ -331,7 +327,7 @@ func TestPullEditComment(t *testing.T) {
 	}
 
 	client := NewDefault()
-	got, res, err := client.PullRequests.EditComment(context.Background(), "xinnjie/testme", 2, 1, input)
+	got, _, err := client.PullRequests.EditComment(context.Background(), "xinnjie/testme", 2, 1, input)
 	if err != nil {
 		t.Error(err)
 		return
@@ -346,8 +342,6 @@ func TestPullEditComment(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestPullCreate(t *testing.T) {
@@ -389,7 +383,7 @@ func TestPullCreate(t *testing.T) {
 	}
 
 	client := NewDefault()
-	got, res, err := client.PullRequests.Create(context.Background(), "xinnjie/testme", input)
+	got, _, err := client.PullRequests.Create(context.Background(), "xinnjie/testme", input)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -403,8 +397,6 @@ func TestPullCreate(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestPullUpdate(t *testing.T) {
@@ -445,7 +437,7 @@ func TestPullUpdate(t *testing.T) {
 	}
 
 	client := NewDefault()
-	got, res, err := client.PullRequests.Update(context.Background(), "xinnjie/testme", 1, input)
+	got, _, err := client.PullRequests.Update(context.Background(), "xinnjie/testme", 1, input)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -459,8 +451,6 @@ func TestPullUpdate(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestPullListEvents(t *testing.T) {
@@ -495,8 +485,6 @@ func TestPullListEvents(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 	t.Run("Page", testPage(res))
 }
 

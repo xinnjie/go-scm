@@ -23,7 +23,7 @@ func TestMilestoneFind(t *testing.T) {
 		File("testdata/milestone.json")
 
 	client := NewDefault()
-	got, res, err := client.Milestones.Find(context.Background(), "xinnjie/testme", 1)
+	got, _, err := client.Milestones.Find(context.Background(), "xinnjie/testme", 1)
 	if err != nil {
 		t.Error(err)
 		return
@@ -43,8 +43,6 @@ func TestMilestoneFind(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestMilestoneList(t *testing.T) {
@@ -58,7 +56,7 @@ func TestMilestoneList(t *testing.T) {
 		File("testdata/milestones.json")
 
 	client := NewDefault()
-	got, res, err := client.Milestones.List(context.Background(), "xinnjie/testme", scm.MilestoneListOptions{})
+	got, _, err := client.Milestones.List(context.Background(), "xinnjie/testme", scm.MilestoneListOptions{})
 	if err != nil {
 		t.Error(err)
 		return
@@ -78,8 +76,6 @@ func TestMilestoneList(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestMilestoneCreate(t *testing.T) {
@@ -101,7 +97,7 @@ func TestMilestoneCreate(t *testing.T) {
 		State:       "open",
 		DueDate:     &dueDate,
 	}
-	got, res, err := client.Milestones.Create(context.Background(), "xinnjie/testme", input)
+	got, _, err := client.Milestones.Create(context.Background(), "xinnjie/testme", input)
 	if err != nil {
 		t.Error(err)
 		return
@@ -121,8 +117,6 @@ func TestMilestoneCreate(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestMilestoneUpdate(t *testing.T) {
@@ -144,7 +138,7 @@ func TestMilestoneUpdate(t *testing.T) {
 		State:       "close",
 		DueDate:     &dueDate,
 	}
-	got, res, err := client.Milestones.Update(context.Background(), "xinnjie/testme", 1, input)
+	got, _, err := client.Milestones.Update(context.Background(), "xinnjie/testme", 1, input)
 	if err != nil {
 		t.Error(err)
 		return
@@ -164,8 +158,6 @@ func TestMilestoneUpdate(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestMilestoneDelete(t *testing.T) {
