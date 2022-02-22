@@ -192,13 +192,23 @@ func (c *wrapper) do(ctx context.Context, method, path string, in, out interface
 	}
 	defer res.Body.Close()
 
-	// TODO(xinnjie) tencentgit do not have rate limit header currently
-	// snapshot the request rate limit
-	c.Client.SetRate(res.Rate)
+	// rate is described at https://git.woa.com/help/menu/api/rate_limiter.html
+	if res.Status == http.StatusTooManyRequests {
+		var rateLimitInfo RateLimit
+		if err := json.NewDecoder(res.Body).Decode(&rateLimitInfo); err != nil {
+			return nil, err
+		}
+		res.Rate.Remaining, _ = strconv.Atoi(rateLimitInfo.XRateLimitRemaining)
+		res.Rate.Limit, _ = strconv.Atoi(rateLimitInfo.XRateLimitTqps)
+		c.Client.SetRate(res.Rate)
+	}
 
 	// if an error is encountered, unmarshal and return the
 	// error response.
 	if res.Status > 300 {
+		if res.Status == 404 {
+			return res, scm.ErrNotFound
+		}
 		return res, errors.New(
 			http.StatusText(res.Status),
 		)
@@ -211,6 +221,17 @@ func (c *wrapper) do(ctx context.Context, method, path string, in, out interface
 	// if a json response is expected, parse and return
 	// the json response.
 	return res, json.NewDecoder(res.Body).Decode(out)
+}
+
+type RateLimit struct {
+	Message                 string `json:"message"`
+	Status                  int    `json:"status"`
+	TimeStamp               string `json:"time_stamp"`
+	XPatternMatched         string `json:"x_pattern_matched"`
+	XPatternPath            string `json:"x_pattern_path"`
+	XRateLimitBurstCapacity string `json:"x_rate_limit_burst_capacity"`
+	XRateLimitRemaining     string `json:"x_rate_limit_remaining"`
+	XRateLimitTqps          string `json:"x_rate_limit_tqps"`
 }
 
 // Error represents a GitLab error.

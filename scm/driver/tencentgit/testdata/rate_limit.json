@@ -1,0 +1,27 @@
+{
+  "message": "Too Many Requests",
+  "status": 429,
+  "timestamp": "2021-06-29 08:30:05.976",
+  "x_pattern_matched": "/api/v3/projects/**/tloc/branch/lifecycle",
+  "x_pattern_path": "/api/v3/projects/namespace%2Fproject_path.git/tloc/branch/lifecycle",
+  "x_rate_limit_burst_capacity": "1",
+  "x_rate_limit_remaining": "0",
+  "x_rate_limit_replenish_rate": "1",
+  "x_rate_limit_requested_tokens": "1",
+  "x_rate_limit_tqps": "1.0",
+  "x_request_username": "user_name",
+  "x_tips": "Request Limited",
+  "x_request_info": {
+    "access_token": "access_token",
+    "path": "/api/v3/projects/namespace%2Fproject_path.git/tloc/branch/lifecycle",
+    "method": "GET",
+    "content_type": "application/x-www-form-urlencoded",
+    "user_id": "user_id",
+    "project_id": "project_id",
+    "user_name": "user_name",
+    "ip": "client_ip",
+    "id_or_path": "namespace/project_path",
+    "private_token": "your_token",
+    "accept": "*/*"
+  }
+}
