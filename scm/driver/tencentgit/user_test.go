@@ -28,7 +28,7 @@ func TestUserFind(t *testing.T) {
 		File("testdata/user.json")
 
 	client := NewDefault()
-	got, res, err := client.Users.Find(context.Background())
+	got, _, err := client.Users.Find(context.Background())
 	if err != nil {
 		t.Error(err)
 		return
@@ -44,9 +44,6 @@ func TestUserFind(t *testing.T) {
 
 		json.NewEncoder(os.Stdout).Encode(got)
 	}
-
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestUserLoginFind(t *testing.T) {
@@ -61,7 +58,7 @@ func TestUserLoginFind(t *testing.T) {
 		File("testdata/user_search.json")
 
 	client := NewDefault()
-	got, res, err := client.Users.FindLogin(context.Background(), "john_smith")
+	got, _, err := client.Users.FindLogin(context.Background(), "john_smith")
 	if err != nil {
 		t.Error(err)
 		return
@@ -76,8 +73,6 @@ func TestUserLoginFind(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
 
 func TestUserLoginFind_NotFound(t *testing.T) {
@@ -131,7 +126,7 @@ func TestUserEmailFind(t *testing.T) {
 		File("testdata/user.json")
 
 	client := NewDefault()
-	got, res, err := client.Users.FindEmail(context.Background())
+	got, _, err := client.Users.FindEmail(context.Background())
 	if err != nil {
 		t.Error(err)
 		return
@@ -140,6 +135,4 @@ func TestUserEmailFind(t *testing.T) {
 		t.Errorf("Want user Email %q, got %q", want, got)
 	}
 
-	t.Run("Request", testRequest(res))
-	t.Run("Rate", testRate(res))
 }
