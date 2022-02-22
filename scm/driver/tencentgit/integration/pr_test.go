@@ -22,7 +22,7 @@ func testPullRequests(client *scm.Client) func(t *testing.T) {
 		t.Run("List", testPullRequestList(client))
 		t.Run("Find", testPullRequestFind(client))
 		t.Run("Changes", testPullRequestChanges(client))
-		//t.Run("Comments", testPullRequestComments(client))
+		t.Run("Comments", testPullRequestComments(client))
 	}
 }
 
@@ -76,7 +76,7 @@ func testPullRequestComments(client *scm.Client) func(t *testing.T) {
 func testPullRequestCommentFind(client *scm.Client) func(t *testing.T) {
 	return func(t *testing.T) {
 		t.Parallel()
-		result, _, err := client.PullRequests.FindComment(context.Background(), "gitlab-org/testme", 1, 2990882)
+		result, _, err := client.PullRequests.FindComment(context.Background(), "xinnjie/testme", 3, 1383976)
 		if err != nil {
 			t.Error(err)
 		}
@@ -88,7 +88,7 @@ func testPullRequestCommentList(client *scm.Client) func(t *testing.T) {
 	return func(t *testing.T) {
 		t.Parallel()
 		opts := scm.ListOptions{}
-		result, _, err := client.PullRequests.ListComments(context.Background(), "gitlab-org/testme", 1, opts)
+		result, _, err := client.PullRequests.ListComments(context.Background(), "xinnjie/testme", 1, opts)
 		if err != nil {
 			t.Error(err)
 		}

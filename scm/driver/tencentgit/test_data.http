@@ -1,0 +1,6 @@
+GET  https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/repository/commits/dc238bca5c226bb7a2c7cc5bdbfc9930d6abd8b6
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+
+###
+GET  https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/repository/branches/master
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
