@@ -12,8 +12,6 @@ import (
 	"github.com/jenkins-x/go-scm/scm"
 )
 
-const SearchTimeFormat string = "2006-01-02T15:04:05-0700"
-
 func encode(s string) string {
 	return strings.Replace(s, "/", "%2F", -1)
 }
@@ -108,20 +106,17 @@ func encodePullRequestListOptions(opts scm.PullRequestListOptions) string {
 		}
 	}
 
-	if len(opts.Labels) > 0 {
-		panic("not supported")
-	}
 	if opts.CreatedAfter != nil {
-		params.Set("created_after", opts.CreatedAfter.Format(SearchTimeFormat))
+		params.Set("created_after", opts.CreatedAfter.Format(timeFormat))
 	}
 	if opts.CreatedBefore != nil {
-		params.Set("created_before", opts.CreatedBefore.Format(SearchTimeFormat))
+		params.Set("created_before", opts.CreatedBefore.Format(timeFormat))
 	}
 	if opts.UpdatedAfter != nil {
-		params.Set("updated_after", opts.UpdatedAfter.Format(SearchTimeFormat))
+		params.Set("updated_after", opts.UpdatedAfter.Format(timeFormat))
 	}
 	if opts.UpdatedBefore != nil {
-		params.Set("updated_before", opts.UpdatedBefore.Format(SearchTimeFormat))
+		params.Set("updated_before", opts.UpdatedBefore.Format(timeFormat))
 	}
 	return params.Encode()
 }

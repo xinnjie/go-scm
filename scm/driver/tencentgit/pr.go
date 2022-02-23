@@ -7,6 +7,7 @@ package tencentgit
 import (
 	"context"
 	"fmt"
+	"k8s.io/apimachinery/pkg/util/sets"
 	"net/url"
 	"path"
 	"strconv"
@@ -42,21 +43,31 @@ func (s *pullService) FindComment(ctx context.Context, repo string, index, id in
 }
 
 func (s *pullService) List(ctx context.Context, repo string, opts scm.PullRequestListOptions) ([]*scm.PullRequest, *scm.Response, error) {
-	// label not supported refer to  https://git.woa.com/help/menu/api/merge_requests.html#获取合并请求列表
-	if len(opts.Labels) != 0 {
-		opts.Labels = nil
-	}
 	path := fmt.Sprintf("api/v3/projects/%s/merge_requests?%s", encode(repo), encodePullRequestListOptions(opts))
 	out := []*pr{}
 	res, err := s.client.do(ctx, "GET", path, nil, &out)
 	if err != nil {
 		return nil, res, err
 	}
-	convRepos, convRes, err := s.convertPullRequestList(ctx, repo, out)
+	convPrList, convRes, err := s.convertPullRequestList(ctx, repo, out)
 	if err != nil {
 		return nil, convRes, err
 	}
-	return convRepos, res, nil
+	// if optes.Labels is set, filter the according prs
+	if len(opts.Labels) != 0 {
+		var filterPrList []*scm.PullRequest
+		filterLabels := sets.NewString(opts.Labels...)
+		for _, pullRequest := range convPrList {
+			var prLabels []string
+			for _, labelItem := range pullRequest.Labels {
+				prLabels = append(prLabels, labelItem.Name)
+			}
+			if filterLabels.HasAny(prLabels...) {
+				filterPrList = append(filterPrList, pullRequest)
+			}
+		}
+	}
+	return convPrList, res, nil
 }
 
 func (s *pullService) ListChanges(ctx context.Context, repo string, number int, opts scm.ListOptions) ([]*scm.Change, *scm.Response, error) {
