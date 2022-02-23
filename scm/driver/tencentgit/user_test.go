@@ -51,14 +51,14 @@ func TestUserLoginFind(t *testing.T) {
 
 	gock.New("https://git.code.tencent.com").
 		Get("/api/v3/users").
-		MatchParam("search", "john_smith").
+		MatchParam("search", "xinnjie").
 		Reply(200).
 		Type("application/json").
 		SetHeaders(mockHeaders).
 		File("testdata/user_search.json")
 
 	client := NewDefault()
-	got, _, err := client.Users.FindLogin(context.Background(), "john_smith")
+	got, _, err := client.Users.FindLogin(context.Background(), "xinnjie")
 	if err != nil {
 		t.Error(err)
 		return
