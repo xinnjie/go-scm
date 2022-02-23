@@ -101,6 +101,7 @@ func (s *pullService) ListEvents(ctx context.Context, repo string, index int, op
 	return convertLabelEvents(out), res, err
 }
 
+// TODO(xinnjie) 重点修复标签相关
 func (s *pullService) AddLabel(ctx context.Context, repo string, number int, label string) (*scm.Response, error) {
 	return s.setLabels(ctx, repo, number, label, "add_labels")
 }
