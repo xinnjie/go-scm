@@ -169,34 +169,6 @@ func TestWebhooks(t *testing.T) {
 	}
 }
 
-func TestWebhook_SignatureValid(t *testing.T) {
-	f, _ := ioutil.ReadFile("testdata/webhooks/branch_delete.json")
-	r, _ := http.NewRequest("GET", "/", bytes.NewBuffer(f))
-	r.Header.Set("X-Gitlab-Event", "Push Hook")
-	r.Header.Set("X-Gitlab-Token", "topsecret")
-	r.Header.Set("X-Request-Id", "ee8d97b4-1479-43f1-9cac-fbbd1b80da55")
-
-	s := new(webhookService)
-	_, err := s.Parse(r, secretFunc)
-	if err != nil {
-		t.Error(err)
-	}
-}
-
-func TestWebhook_SignatureInvalid(t *testing.T) {
-	f, _ := ioutil.ReadFile("testdata/webhooks/branch_delete.json")
-	r, _ := http.NewRequest("GET", "/", bytes.NewBuffer(f))
-	r.Header.Set("X-Gitlab-Event", "Push Hook")
-	r.Header.Set("X-Gitlab-Token", "void")
-	r.Header.Set("X-Request-Id", "ee8d97b4-1479-43f1-9cac-fbbd1b80da55")
-
-	s := new(webhookService)
-	_, err := s.Parse(r, secretFunc)
-	if err != scm.ErrSignatureInvalid {
-		t.Errorf("Expect invalid signature error, got %v", err)
-	}
-}
-
 func secretFunc(scm.Webhook) (string, error) {
 	return "topsecret", nil
 }
