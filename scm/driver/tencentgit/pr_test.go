@@ -18,24 +18,16 @@ func TestPullFind(t *testing.T) {
 	defer gock.Off()
 
 	gock.New("https://git.code.tencent.com").
+		Persist().
 		Get("/api/v3/projects/179129").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		File("testdata/repo.json")
-
-	gock.New("https://git.code.tencent.com").
-		Get("/api/v3/projects/179129").
-		Reply(200).
-		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/repo.json")
 
 	gock.New("https://git.code.tencent.com").
 		Get("api/v3/projects/xinnjie/testme/merge_request/iid/1").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/merge.json")
 
 	client := NewDefault()

@@ -114,7 +114,7 @@ func TestGitListCommits(t *testing.T) {
 		File("testdata/commits.json")
 
 	client := NewDefault()
-	got, res, err := client.Git.ListCommits(context.Background(), "xinnjie/testme", scm.CommitListOptions{Ref: "master", Page: 1, Size: 30})
+	got, _, err := client.Git.ListCommits(context.Background(), "xinnjie/testme", scm.CommitListOptions{Ref: "master", Page: 1, Size: 30})
 	if err != nil {
 		t.Error(err)
 		return
@@ -129,7 +129,6 @@ func TestGitListCommits(t *testing.T) {
 		t.Log(diff)
 	}
 
-	t.Run("Page", testPage(res))
 }
 
 func TestGitListBranches(t *testing.T) {
@@ -177,7 +176,7 @@ func TestGitListTags(t *testing.T) {
 		File("testdata/tags.json")
 
 	client := NewDefault()
-	got, res, err := client.Git.ListTags(context.Background(), "xinnjie/testme", scm.ListOptions{Page: 1, Size: 30})
+	got, _, err := client.Git.ListTags(context.Background(), "xinnjie/testme", scm.ListOptions{Page: 1, Size: 30})
 	if err != nil {
 		t.Error(err)
 		return
@@ -191,8 +190,6 @@ func TestGitListTags(t *testing.T) {
 		t.Errorf("Unexpected Results")
 		t.Log(diff)
 	}
-
-	t.Run("Page", testPage(res))
 }
 
 func TestGitListChanges(t *testing.T) {
