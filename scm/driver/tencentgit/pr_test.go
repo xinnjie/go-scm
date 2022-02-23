@@ -111,12 +111,12 @@ func TestPullList(t *testing.T) {
 }
 
 func TestPullListChanges(t *testing.T) {
+	defer gock.Off()
+
 	gock.New("https://git.code.tencent.com").
 		Get("/api/v3/projects/xinnjie/testme/merge_requests/339869/changes").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeaders).
 		File("testdata/merge_diff.json")
 
 	client := NewDefault()
@@ -125,7 +125,6 @@ func TestPullListChanges(t *testing.T) {
 		t.Error(err)
 		return
 	}
-
 	want := []*scm.Change{}
 	raw, _ := ioutil.ReadFile("testdata/merge_diff.json.golden")
 	json.Unmarshal(raw, &want)

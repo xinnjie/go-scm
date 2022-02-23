@@ -72,7 +72,7 @@ func (s *pullService) List(ctx context.Context, repo string, opts scm.PullReques
 
 func (s *pullService) ListChanges(ctx context.Context, repo string, number int, opts scm.ListOptions) ([]*scm.Change, *scm.Response, error) {
 	// tencentgit list changes do not support pagination
-	path := fmt.Sprintf("api/v3/projects/%s/merge_request/%d/changes", encode(repo), number)
+	path := fmt.Sprintf("api/v3/projects/%s/merge_requests/%d/changes", encode(repo), number)
 	out := new(changes)
 	res, err := s.client.do(ctx, "GET", path, nil, &out)
 	return convertChangeList(out.Changes), res, err
