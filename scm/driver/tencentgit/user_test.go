@@ -131,7 +131,7 @@ func TestUserEmailFind(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if got, want := got, "john@example.com"; got != want {
+	if got, want := got, "wx_1600e990b7cb469a97087b334c94acee@git.code.tencent.com"; got != want {
 		t.Errorf("Want user Email %q, got %q", want, got)
 	}
 
