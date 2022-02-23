@@ -1,79 +1,107 @@
 [
   {
-    "Number": 1,
-    "Title": "edit README",
-    "State": "closed",
-    "Body": "edit README",
-    "Sha": "a398282a168e6919e8ff3806e1fa11f66ab53d30",
-    "Ref": "refs/merge-requests/1/head",
-    "Source": "mr-test",
+    "Number": 3,
+    "Title": "add close-pr.md",
+    "Body": "add close-pr.md",
+    "Labels": [
+      {
+        "ID": 0,
+        "URL": "",
+        "Name": "versions",
+        "Description": "",
+        "Color": ""
+      },
+      {
+        "ID": 0,
+        "URL": "",
+        "Name": "test_label",
+        "Description": "",
+        "Color": ""
+      }
+    ],
+    "Sha": "",
+    "Ref": "refs/merge-requests/3/head",
+    "Source": "branch-for-close-test",
     "Target": "master",
-    "Link": "https://git.code.tencent.com/xinnjie/testme/merge_requests/1",
-    "Closed": true,
-    "Merged": true,
+    "Base": {
+      "Ref": "master",
+      "Sha": "225163e0798965b54b6df9579e35f0725176a792",
+      "Repo": {
+        "ID": "179129",
+        "Namespace": "xinnjie",
+        "Name": "testme",
+        "FullName": "xinnjie/testme",
+        "Perm": {
+          "Pull": true,
+          "Push": false,
+          "Admin": false
+        },
+        "Branch": "master",
+        "Private": false,
+        "Archived": false,
+        "Clone": "https://git.code.tencent.com/xinnjie/testme.git",
+        "CloneSSH": "git@git.code.tencent.com:xinnjie/testme.git",
+        "Link": "https://git.code.tencent.com/xinnjie/testme",
+        "Created": "2021-08-20T10:44:47Z",
+        "Updated": "0001-01-01T00:00:00Z"
+      }
+    },
+    "Head": {
+      "Ref": "branch-for-close-test",
+      "Sha": "b230dc632847381015ad4beffbdcb4e4d23f775b",
+      "Repo": {
+        "ID": "179129",
+        "Namespace": "xinnjie",
+        "Name": "testme",
+        "FullName": "xinnjie/testme",
+        "Perm": {
+          "Pull": true,
+          "Push": false,
+          "Admin": false
+        },
+        "Branch": "master",
+        "Private": false,
+        "Archived": false,
+        "Clone": "https://git.code.tencent.com/xinnjie/testme.git",
+        "CloneSSH": "git@git.code.tencent.com:xinnjie/testme.git",
+        "Link": "https://git.code.tencent.com/xinnjie/testme",
+        "Created": "2021-08-20T10:44:47Z",
+        "Updated": "0001-01-01T00:00:00Z"
+      }
+    },
+    "Fork": "xinnjie/testme",
+    "State": "open",
+    "Closed": false,
+    "Draft": false,
+    "Merged": false,
     "Mergeable": true,
+    "Rebaseable": false,
     "MergeableState": "mergeable",
+    "MergeSha": "",
     "Author": {
       "ID": 176405,
       "Login": "xinnjie",
       "Name": "xinnjie",
       "Email": "",
-      "Avatar": "https://git.code.tencent.com/uploads/user/avatar/176405/7e72ab97e19e430287c34c54af3bf7e1."
+      "Avatar": "https://git.code.tencent.com/uploads/user/avatar/176405/7e72ab97e19e430287c34c54af3bf7e1.",
+      "Link": "https://git.code.tencent.com/u/xinnjie",
+      "Created": "0001-01-01T00:00:00Z",
+      "Updated": "0001-01-01T00:00:00Z"
     },
-    "Assignees": [
-      {
-        "ID": 176405,
-        "Login": "xinnjie",
-        "Name": "xinnjie",
-        "Avatar": "https://git.code.tencent.com/uploads/user/avatar/176405/7e72ab97e19e430287c34c54af3bf7e1."
-      }
-    ],
-    "Created": "2021-08-22T16:22:38.000Z",
-    "Updated": "2021-08-22T16:29:28.000Z",
-    "Fork": "xinnjie/testme",
-    "Head": {
-      "Ref": "mr-test",
-      "Sha": "26a65da1a8979640c67b099a4ed2538b9feddee2",
-      "Repo": {
-        "ID": "179129",
-        "Namespace": "xinnjie",
-        "Name": "testme",
-        "FullName": "xinnjie/testme",
-        "Perm": {
-          "Pull": true,
-          "Push": false,
-          "Admin": false
-        },
-        "Branch": "master",
-        "Private": false,
-        "Clone": "https://git.code.tencent.com/xinnjie/testme.git",
-        "CloneSSH": "git@git.code.tencent.com:xinnjie/testme.git",
-        "Link": "https://git.code.tencent.com/xinnjie/testme",
-        "Created": "2021-08-20T10:44:47Z",
-        "Updated": "0001-01-01T00:00:00Z"
-      }
+    "Assignees": null,
+    "Reviewers": null,
+    "Milestone": {
+      "Number": 0,
+      "ID": 0,
+      "Title": "",
+      "Description": "",
+      "Link": "",
+      "State": "",
+      "DueDate": null
     },
-    "Base": {
-      "Ref": "master",
-      "Sha": "652a91b83cf37786c64eb286f1efba453a15f34f",
-      "Repo": {
-        "ID": "179129",
-        "Namespace": "xinnjie",
-        "Name": "testme",
-        "FullName": "xinnjie/testme",
-        "Perm": {
-          "Pull": true,
-          "Push": false,
-          "Admin": false
-        },
-        "Branch": "master",
-        "Private": false,
-        "Clone": "https://git.code.tencent.com/xinnjie/testme.git",
-        "CloneSSH": "git@git.code.tencent.com:xinnjie/testme.git",
-        "Link": "https://git.code.tencent.com/xinnjie/testme",
-        "Created": "2021-08-20T10:44:47Z",
-        "Updated": "0001-01-01T00:00:00Z"
-      }
-    }
+    "Created": "2021-08-24T11:28:58Z",
+    "Updated": "2021-08-25T16:59:10Z",
+    "Link": "https://git.code.tencent.com/xinnjie/testme/merge_requests/3",
+    "DiffLink": ""
   }
 ]
