@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"path"
 	"strconv"
+	"strings"
 
 	"github.com/mitchellh/copystructure"
 
@@ -101,21 +102,56 @@ func (s *pullService) ListEvents(ctx context.Context, repo string, index int, op
 	return convertLabelEvents(out), res, err
 }
 
-// TODO(xinnjie) 重点修复标签相关
 func (s *pullService) AddLabel(ctx context.Context, repo string, number int, label string) (*scm.Response, error) {
-	return s.setLabels(ctx, repo, number, label, "add_labels")
+	curLabels, _, err := s.ListLabels(ctx, repo, number, scm.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	alreadyHasLabel := false
+	var labels []string
+	for _, l := range curLabels {
+		if l.Name == label {
+			alreadyHasLabel = true
+			break
+		}
+		labels = append(labels, l.Name)
+	}
+	if alreadyHasLabel {
+		return nil, nil
+	}
+	labels = append(labels, label)
+	return s.setLabels(ctx, repo, number, labels)
 }
 
 func (s *pullService) DeleteLabel(ctx context.Context, repo string, number int, label string) (*scm.Response, error) {
-	return s.setLabels(ctx, repo, number, label, "remove_labels")
+	curLabels, _, err := s.ListLabels(ctx, repo, number, scm.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	alreadyHasLabel := false
+	var labels []string
+	for _, l := range curLabels {
+		if l.Name == label {
+			alreadyHasLabel = true
+		} else {
+			labels = append(labels, l.Name)
+		}
+	}
+	if !alreadyHasLabel {
+		return nil, nil
+	}
+	return s.setLabels(ctx, repo, number, labels)
 }
 
-func (s *pullService) setLabels(ctx context.Context, repo string, number int, labelsStr string, operation string) (*scm.Response, error) {
-	in := url.Values{}
-	in.Set(operation, labelsStr)
-	path := fmt.Sprintf("api/v3/projects/%s/merge_requests/%d?%s", encode(repo), number, in.Encode())
+func (s *pullService) setLabels(ctx context.Context, repo string, number int, labels []string) (*scm.Response, error) {
+	labelStr := strings.Join(labels, ",")
+	_, resp, err := s.updateMergeRequestField(ctx, repo, number, &updateMergeRequestOptions{
+		Labels: &labelStr,
+	})
 
-	return s.client.do(ctx, "PUT", path, nil, nil)
+	return resp, err
 }
 
 func (s *pullService) CreateComment(ctx context.Context, repo string, index int, input *scm.CommentInput) (*scm.Comment, *scm.Response, error) {
@@ -162,63 +198,55 @@ func (s *pullService) Reopen(ctx context.Context, repo string, number int) (*scm
 	return res, err
 }
 
+// AssignIssue Every PR at most have one assignee
 func (s *pullService) AssignIssue(ctx context.Context, repo string, number int, logins []string) (*scm.Response, error) {
+	if len(logins) > 1 || len(logins) == 0 {
+		return nil, scm.ErrNotSupported
+	}
+	assignee := logins[0]
+
 	pr, _, err := s.Find(ctx, repo, number)
 	if err != nil {
 		return nil, err
 	}
-
-	allAssignees := map[int]struct{}{}
-	for _, assignee := range pr.Assignees {
-		allAssignees[assignee.ID] = struct{}{}
-	}
-	for _, l := range logins {
-		u, _, err := s.client.Users.FindLogin(ctx, l)
-		if err != nil {
-			return nil, err
-		}
-		allAssignees[u.ID] = struct{}{}
+	// if already assign to this same person, skip
+	if len(pr.Assignees) != 0 && pr.Assignees[0].Name == assignee {
+		return nil, nil
 	}
 
-	var assigneeIDs []int
-	for i := range allAssignees {
-		assigneeIDs = append(assigneeIDs, i)
+	u, _, err := s.client.Users.FindLogin(ctx, assignee)
+	if err != nil {
+		return nil, err
 	}
 
-	return s.setAssignees(ctx, repo, number, assigneeIDs)
+	return s.setAssignee(ctx, repo, number, u.ID)
 }
 
-func (s *pullService) setAssignees(ctx context.Context, repo string, number int, ids []int) (*scm.Response, error) {
-	if len(ids) == 0 {
-		ids = append(ids, 0)
-	}
+func (s *pullService) setAssignee(ctx context.Context, repo string, number int, id int) (*scm.Response, error) {
 	in := &updateMergeRequestOptions{
-		AssigneeIDs: ids,
+		AssigneeID: &id,
 	}
-	path := fmt.Sprintf("api/v3/projects/%s/merge_requests/%d", encode(repo), number)
-
-	return s.client.do(ctx, "PUT", path, in, nil)
+	_, res, err := s.updateMergeRequestField(ctx, repo, number, in)
+	return res, err
 }
 
+// UnassignIssue Every PR at most have one assignee
 func (s *pullService) UnassignIssue(ctx context.Context, repo string, number int, logins []string) (*scm.Response, error) {
+	if len(logins) > 1 || len(logins) == 0 {
+		return nil, scm.ErrNotSupported
+	}
+	toUnassign := logins[0]
+
 	pr, _, err := s.Find(ctx, repo, number)
 	if err != nil {
 		return nil, err
 	}
-	var assignees []int
-	for _, assignee := range pr.Assignees {
-		shouldKeep := true
-		for _, l := range logins {
-			if assignee.Login == l {
-				shouldKeep = false
-			}
-		}
-		if shouldKeep {
-			assignees = append(assignees, assignee.ID)
-		}
+	// if toUnassign  is not assign before, skip
+	if len(pr.Assignees) == 0 || pr.Assignees[0].Name != toUnassign {
+		return nil, nil
 	}
 
-	return s.setAssignees(ctx, repo, number, assignees)
+	return s.setAssignee(ctx, repo, number, 0)
 }
 
 func (s *pullService) RequestReview(ctx context.Context, repo string, number int, logins []string) (*scm.Response, error) {
@@ -265,35 +293,22 @@ func (s *pullService) Update(ctx context.Context, repo string, number int, input
 }
 
 func (s *pullService) SetMilestone(ctx context.Context, repo string, prID int, number int) (*scm.Response, error) {
-	updateOpts := &updateMergeRequestOptions{
-		MilestoneID: &number,
-	}
-	_, res, err := s.updateMergeRequestField(ctx, repo, prID, updateOpts)
-	return res, err
+	return nil, scm.ErrNotSupported
 }
 
 func (s *pullService) ClearMilestone(ctx context.Context, repo string, prID int) (*scm.Response, error) {
-	zeroVal := 0
-	updateOpts := &updateMergeRequestOptions{
-		MilestoneID: &zeroVal,
-	}
-	_, res, err := s.updateMergeRequestField(ctx, repo, prID, updateOpts)
-	return res, err
+	return nil, scm.ErrNotSupported
+
 }
 
 type updateMergeRequestOptions struct {
-	Title              *string `json:"title,omitempty"`
-	Description        *string `json:"description,omitempty"`
-	TargetBranch       *string `json:"target_branch,omitempty"`
-	AssigneeID         *int    `json:"assignee_id,omitempty"`
-	AssigneeIDs        []int   `json:"assignee_ids,omitempty"`
-	Labels             *string `json:"labels,omitempty"`
-	MilestoneID        *int    `json:"milestone_id,omitempty"`
-	StateEvent         *string `json:"state_event,omitempty"`
-	RemoveSourceBranch *bool   `json:"remove_source_branch,omitempty"`
-	Squash             *bool   `json:"squash,omitempty"`
-	DiscussionLocked   *bool   `json:"discussion_locked,omitempty"`
-	AllowCollaboration *bool   `json:"allow_collaboration,omitempty"`
+	Title        *string `json:"title,omitempty"`
+	Description  *string `json:"description,omitempty"`
+	TargetBranch *string `json:"target_branch,omitempty"`
+	AssigneeID   *int    `json:"assignee_id,omitempty"`
+	Labels       *string `json:"labels,omitempty"`
+	StateEvent   *string `json:"state_event,omitempty"`
+	Squash       *bool   `json:"squash,omitempty"`
 }
 
 func (s *pullService) updateMergeRequestField(ctx context.Context, repo string, number int, input *updateMergeRequestOptions) (*scm.PullRequest, *scm.Response, error) {

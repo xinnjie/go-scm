@@ -17,3 +17,27 @@ PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
 ###
 GET  https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_requests?page=1&per_page=30
 PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+
+
+### 修改标签
+PUT https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_request/341756
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+Content-Type: application/json
+
+{
+  "labels": "versions"
+}
+
+### 修改asisnee
+PUT https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_request/341756
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+Content-Type: application/json
+
+{
+  "assignee_id": 0
+}
+
+
+### 查询pr
+GET https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_request/iid/1
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
