@@ -8,7 +8,6 @@ import (
 	"context"
 	"fmt"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"net/url"
 	"path"
 	"strconv"
 	"strings"
@@ -154,12 +153,19 @@ func (s *pullService) setLabels(ctx context.Context, repo string, number int, la
 	return resp, err
 }
 
+type mergeRequestNoteOptions struct {
+	Body     string  `json:"body"`
+	Path     *string `json:"path,omitempty"` // file path
+	Line     *string `json:"line,omitempty"`
+	LineType *string `json:"line_type,omitempty"` // "old" or "new"
+}
+
 func (s *pullService) CreateComment(ctx context.Context, repo string, index int, input *scm.CommentInput) (*scm.Comment, *scm.Response, error) {
-	in := url.Values{}
-	in.Set("body", input.Body)
-	path := fmt.Sprintf("api/v3/projects/%s/merge_requests/%d/notes?%s", encode(repo), index, in.Encode())
+	path := fmt.Sprintf("api/v3/projects/%s/merge_requests/%d/notes", encode(repo), index)
 	out := new(issueComment)
-	res, err := s.client.do(ctx, "POST", path, nil, out)
+	res, err := s.client.do(ctx, "POST", path, &mergeRequestNoteOptions{
+		Body: input.Body,
+	}, out)
 	return convertIssueComment(out), res, err
 }
 

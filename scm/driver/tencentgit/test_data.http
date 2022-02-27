@@ -41,3 +41,12 @@ Content-Type: application/json
 ### 查询pr
 GET https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_request/iid/1
 PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+
+### 创建评论
+POST https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_requests/341756/notes
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+Content-Type: application/json
+
+{
+  "body": "lgtm"
+}

@@ -245,7 +245,8 @@ func TestPullCreateComment(t *testing.T) {
 
 	gock.New("https://git.code.tencent.com").
 		Post("/api/v3/projects/xinnjie/testme/merge_requests/1/notes").
-		MatchParam("body", "lgtm").
+		MatchType("json").
+		JSON(map[string]string{"body": "lgtm"}).
 		Reply(201).
 		Type("application/json").
 		SetHeaders(mockHeaders).
