@@ -193,14 +193,18 @@ func (s *pullService) Merge(ctx context.Context, repo string, number int, option
 }
 
 func (s *pullService) Close(ctx context.Context, repo string, number int) (*scm.Response, error) {
-	path := fmt.Sprintf("api/v3/projects/%s/merge_requests/%d?state_event=closed", encode(repo), number)
-	res, err := s.client.do(ctx, "PUT", path, nil, nil)
+	stateEvent := "close"
+	_, res, err := s.updateMergeRequestField(ctx, repo, number, &updateMergeRequestOptions{
+		StateEvent: &stateEvent,
+	})
 	return res, err
 }
 
 func (s *pullService) Reopen(ctx context.Context, repo string, number int) (*scm.Response, error) {
-	path := fmt.Sprintf("api/v3/projects/%s/merge_requests/%d?state_event=reopen", encode(repo), number)
-	res, err := s.client.do(ctx, "PUT", path, nil, nil)
+	stateEvent := "reopen"
+	_, res, err := s.updateMergeRequestField(ctx, repo, number, &updateMergeRequestOptions{
+		StateEvent: &stateEvent,
+	})
 	return res, err
 }
 

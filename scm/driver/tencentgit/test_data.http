@@ -50,3 +50,8 @@ Content-Type: application/json
 {
   "body": "lgtm"
 }
+
+
+### 查询评论
+GET https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_requests/341756/notes?page=1&per_page=3
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
