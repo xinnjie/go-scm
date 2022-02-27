@@ -23,7 +23,6 @@ func TestOrganizationFind(t *testing.T) {
 		Get("/api/v3/groups/Twitter").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/group.json")
 
 	client := NewDefault()
@@ -53,8 +52,6 @@ func TestOrganizationList(t *testing.T) {
 		MatchParam("page", "1").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeaders).
 		File("testdata/groups.json")
 
 	client := NewDefault()

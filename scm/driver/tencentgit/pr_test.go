@@ -61,7 +61,6 @@ func TestPullList(t *testing.T) {
 		Get("/api/v3/projects/179129").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/repo.json")
 	// FIXME(xinnjie) gock not match request after add updatedAfter param
 	//updatedAfter, _ := time.Parse(timeFormat, "2019-03-25T00:10:19+0000")
@@ -134,9 +133,7 @@ func TestPullMerge(t *testing.T) {
 	gock.New("https://git.code.tencent.com").
 		Put("/api/v3/projects/xinnjie/testme/merge_requests/339869/merge").
 		Reply(200).
-		Type("application/json").
-		SetHeaders(mockHeaders)
-
+		Type("application/json")
 	client := NewDefault()
 	_, err := client.PullRequests.Merge(context.Background(), "xinnjie/testme", 339869, nil)
 	if err != nil {
@@ -152,9 +149,7 @@ func TestPullClose(t *testing.T) {
 		Put("/api/v3/projects/xinnjie/testme/merge_requests/1347").
 		MatchParam("state_event", "closed").
 		Reply(200).
-		Type("application/json").
-		SetHeaders(mockHeaders)
-
+		Type("application/json")
 	client := NewDefault()
 	_, err := client.PullRequests.Close(context.Background(), "xinnjie/testme", 1347)
 	if err != nil {
@@ -170,8 +165,7 @@ func TestPullReopen(t *testing.T) {
 		Put("/api/v3/projects/xinnjie/testme/merge_requests/1347").
 		MatchParam("state_event", "reopen").
 		Reply(200).
-		Type("application/json").
-		SetHeaders(mockHeaders)
+		Type("application/json")
 
 	client := NewDefault()
 	_, err := client.PullRequests.Reopen(context.Background(), "xinnjie/testme", 1347)
@@ -188,7 +182,6 @@ func TestPullCommentFind(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/merge_requests/2/notes/1").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/merge_note.json")
 
 	client := NewDefault()
@@ -217,12 +210,10 @@ func TestPullListComments(t *testing.T) {
 		MatchParam("per_page", "30").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeaders).
 		File("testdata/merge_notes.json")
 
 	client := NewDefault()
-	got, res, err := client.PullRequests.ListComments(context.Background(), "xinnjie/testme", 1, scm.ListOptions{Size: 30, Page: 1})
+	got, _, err := client.PullRequests.ListComments(context.Background(), "xinnjie/testme", 1, scm.ListOptions{Size: 30, Page: 1})
 	if err != nil {
 		t.Error(err)
 		return
@@ -236,8 +227,6 @@ func TestPullListComments(t *testing.T) {
 		t.Errorf("Unexpected Results")
 		t.Log(diff)
 	}
-
-	t.Run("Page", testPage(res))
 }
 
 func TestPullCreateComment(t *testing.T) {
@@ -249,7 +238,6 @@ func TestPullCreateComment(t *testing.T) {
 		JSON(map[string]string{"body": "lgtm"}).
 		Reply(201).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/merge_note.json")
 
 	input := &scm.CommentInput{
@@ -280,8 +268,7 @@ func TestPullCommentDelete(t *testing.T) {
 	gock.New("https://git.code.tencent.com").
 		Delete("/api/v3/projects/xinnjie/testme/merge_requests/2/notes/1").
 		Reply(204).
-		Type("application/json").
-		SetHeaders(mockHeaders)
+		Type("application/json")
 
 	client := NewDefault()
 	_, err := client.PullRequests.DeleteComment(context.Background(), "xinnjie/testme", 2, 1)
@@ -300,7 +287,6 @@ func TestPullEditComment(t *testing.T) {
 		File("testdata/edit_issue_note.json").
 		Reply(201).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/merge_note.json")
 
 	input := &scm.CommentInput{
@@ -332,28 +318,24 @@ func TestPullCreate(t *testing.T) {
 		Get("/api/v3/projects/32732").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/repo.json")
 
 	gock.New("https://git.code.tencent.com").
 		Get("/api/v3/projects/2").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/other_repo.json")
 
 	gock.New("https://git.code.tencent.com").
 		Get("/api/v3/projects/2").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/other_repo.json")
 
 	gock.New("https://git.code.tencent.com").
 		Post("/api/v3/projects/xinnjie/testme/merge_requests").
 		Reply(201).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/pr_create.json")
 
 	input := &scm.PullRequestInput{
@@ -387,21 +369,18 @@ func TestPullUpdate(t *testing.T) {
 		Get("/api/v3/projects/32732").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/repo.json")
 
 	gock.New("https://git.code.tencent.com").
 		Get("/api/v3/projects/2").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/other_repo.json")
 
 	gock.New("https://git.code.tencent.com").
 		Get("/api/v3/projects/2").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/other_repo.json")
 
 	gock.New("https://git.code.tencent.com").
@@ -409,7 +388,6 @@ func TestPullUpdate(t *testing.T) {
 		File("testdata/pr_update.json").
 		Reply(201).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/pr_create.json")
 
 	input := &scm.PullRequestInput{
@@ -443,8 +421,6 @@ func TestPullListEvents(t *testing.T) {
 		MatchParam("per_page", "30").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeaders).
 		File("testdata/pr_events.json")
 
 	client := NewDefault()
@@ -476,21 +452,18 @@ func TestPullSetMilestone(t *testing.T) {
 		Get("/api/v3/projects/32732").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/repo.json")
 
 	gock.New("https://git.code.tencent.com").
 		Get("/api/v3/projects/2").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/other_repo.json")
 
 	gock.New("https://git.code.tencent.com").
 		Get("/api/v3/projects/2").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/other_repo.json")
 
 	gock.New("https://git.code.tencent.com").
@@ -498,7 +471,6 @@ func TestPullSetMilestone(t *testing.T) {
 		File("testdata/issue_or_pr_set_milestone.json").
 		Reply(201).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/pr_create.json")
 
 	client := NewDefault()
@@ -515,21 +487,18 @@ func TestPullClearMilestone(t *testing.T) {
 		Get("/api/v3/projects/32732").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/repo.json")
 
 	gock.New("https://git.code.tencent.com").
 		Get("/api/v3/projects/2").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/other_repo.json")
 
 	gock.New("https://git.code.tencent.com").
 		Get("/api/v3/projects/2").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/other_repo.json")
 
 	gock.New("https://git.code.tencent.com").
@@ -537,7 +506,6 @@ func TestPullClearMilestone(t *testing.T) {
 		File("testdata/issue_or_pr_clear_milestone.json").
 		Reply(201).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/pr_create.json")
 
 	client := NewDefault()

@@ -24,7 +24,6 @@ func TestUserFind(t *testing.T) {
 		Get("/api/v3/user").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/user.json")
 
 	client := NewDefault()
@@ -54,7 +53,6 @@ func TestUserLoginFind(t *testing.T) {
 		MatchParam("search", "xinnjie").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/user_search.json")
 
 	client := NewDefault()
@@ -83,7 +81,6 @@ func TestUserLoginFind_NotFound(t *testing.T) {
 		MatchParam("search", "jcitizen").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/user_search.json")
 
 	client := NewDefault()
@@ -101,7 +98,6 @@ func TestUserLoginFind_NotAuthorized(t *testing.T) {
 		MatchParam("search", "jcitizen").
 		Reply(401).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		BodyString(`{"message":"401 Unauthorized"}`)
 
 	client := NewDefault()
@@ -122,7 +118,6 @@ func TestUserEmailFind(t *testing.T) {
 		Get("/api/v3/user").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/user.json")
 
 	client := NewDefault()

@@ -14,8 +14,8 @@ GET  https://git.code.tencent.com/api/v3/users?search=xinnjie&page=1
 PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
 
 
-###
-GET  https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_requests?page=1&per_page=30
+### 查询pr
+GET  https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_requests?page=1&per_page=1
 PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
 
 

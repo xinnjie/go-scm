@@ -19,7 +19,6 @@ func TestReleaseFindByTag(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/releases/v1.0.1").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/release.json")
 
 	client := NewDefault()
@@ -52,7 +51,6 @@ func TestReleaseList(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/releases").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/releases.json")
 
 	client := NewDefault()
@@ -86,7 +84,6 @@ func TestReleaseCreate(t *testing.T) {
 		File("testdata/release_create.json").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/release.json")
 
 	client := NewDefault()
@@ -126,7 +123,6 @@ func TestReleaseUpdateByTag(t *testing.T) {
 		File("testdata/release_create.json").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/release.json")
 
 	client := NewDefault()
@@ -160,8 +156,7 @@ func TestReleaseDeleteByTag(t *testing.T) {
 	gock.New("https://git.code.tencent.com").
 		Delete("/api/v3/projects/xinnjie/testme/releases/v1.0").
 		Reply(200).
-		Type("application/json").
-		SetHeaders(mockHeaders)
+		Type("application/json")
 
 	client := NewDefault()
 	_, err := client.Releases.DeleteByTag(context.Background(), "xinnjie/testme", "v1.0")

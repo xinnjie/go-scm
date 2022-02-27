@@ -26,7 +26,6 @@ func TestContentFind(t *testing.T) {
 		MatchParam("ref", "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/content.json")
 
 	client := NewDefault()
@@ -60,7 +59,6 @@ func TestContentList(t *testing.T) {
 		MatchParam("ref", "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/content_list.json")
 
 	client := NewDefault()
@@ -120,7 +118,6 @@ func TestContentCreate(t *testing.T) {
 		}).
 		Reply(201).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/content.json")
 
 	params := &scm.ContentParams{
@@ -152,7 +149,6 @@ func TestContentUpdate(t *testing.T) {
 		}).
 		Reply(201).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/content.json")
 
 	params := &scm.ContentParams{

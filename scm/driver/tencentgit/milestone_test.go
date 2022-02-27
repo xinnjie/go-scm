@@ -19,7 +19,6 @@ func TestMilestoneFind(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/milestones/1").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/milestone.json")
 
 	client := NewDefault()
@@ -52,7 +51,6 @@ func TestMilestoneList(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/milestones").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/milestones.json")
 
 	client := NewDefault()
@@ -86,7 +84,6 @@ func TestMilestoneCreate(t *testing.T) {
 		File("testdata/milestone_create.json").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/milestone.json")
 
 	client := NewDefault()
@@ -127,7 +124,6 @@ func TestMilestoneUpdate(t *testing.T) {
 		File("testdata/milestone_update.json").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/milestone.json")
 
 	client := NewDefault()
@@ -166,9 +162,7 @@ func TestMilestoneDelete(t *testing.T) {
 	gock.New("https://git.code.tencent.com").
 		Delete("/api/v3/projects/xinnjie/testme/milestones/1").
 		Reply(200).
-		Type("application/json").
-		SetHeaders(mockHeaders)
-
+		Type("application/json")
 	client := NewDefault()
 	_, err := client.Milestones.Delete(context.Background(), "xinnjie/testme", 1)
 	if err != nil {

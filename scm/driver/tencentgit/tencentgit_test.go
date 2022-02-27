@@ -18,22 +18,6 @@ import (
 	"github.com/jenkins-x/go-scm/scm"
 )
 
-var mockHeaders = map[string]string{}
-
-var mockPageHeaders = map[string]string{
-	"Link": `<https://git.code.tencent.com/resource?page=2>; rel="next",` +
-		`<https://git.code.tencent.com/resource?page=1>; rel="prev",` +
-		`<https://git.code.tencent.com/resource?page=1>; rel="first",` +
-		`<https://git.code.tencent.com/resource?page=5>; rel="last"`,
-}
-
-var mockPageHeadersNoPagination = map[string]string{
-	"Link": `<https://git.code.tencent.com/resource?page=1>; rel="next",` +
-		`<https://git.code.tencent.com/resource?page=1>; rel="prev",` +
-		`<https://git.code.tencent.com/resource?page=1>; rel="first",` +
-		`<https://git.code.tencent.com/resource?page=1>; rel="last"`,
-}
-
 const mimeJSON = "application/json"
 
 func TestClient(t *testing.T) {

@@ -50,8 +50,8 @@ func TestUpdateCommitStatus(t *testing.T) {
 				"web_url":    "",
 			},
 		}).
-		Type("application/json").
-		SetHeaders(mockHeaders)
+		Type("application/json")
+
 	pipelineID := 29355
 	options := scm.CommitStatusUpdateOptions{
 		State:       "pending",
@@ -115,8 +115,8 @@ func TestUpdateCommitStatusWithEmptyPipelineId(t *testing.T) {
 				"web_url":    "",
 			},
 		}).
-		Type("application/json").
-		SetHeaders(mockHeaders)
+		Type("application/json")
+
 	options := scm.CommitStatusUpdateOptions{
 		State:       "pending",
 		Name:        "CodeScan",
@@ -179,8 +179,8 @@ func TestUpdateCommitStatusWithZeroPipelineId(t *testing.T) {
 				"web_url":    "",
 			},
 		}).
-		Type("application/json").
-		SetHeaders(mockHeaders)
+		Type("application/json")
+
 	pipelineID := 0
 	options := scm.CommitStatusUpdateOptions{
 		State:       "pending",

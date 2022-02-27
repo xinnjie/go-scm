@@ -24,7 +24,6 @@ func TestGitFindCommit(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/repository/commits/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/commit.json")
 
 	client := NewDefault()
@@ -51,7 +50,6 @@ func TestGitFindBranch(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/repository/branches/master").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/branch.json")
 
 	client := NewDefault()
@@ -78,7 +76,6 @@ func TestGitFindTag(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/repository/tags/v0.0.1").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/tag.json")
 
 	client := NewDefault()
@@ -109,8 +106,6 @@ func TestGitListCommits(t *testing.T) {
 		MatchParam("ref_name", "master").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeaders).
 		File("testdata/commits.json")
 
 	client := NewDefault()
@@ -140,8 +135,6 @@ func TestGitListBranches(t *testing.T) {
 		MatchParam("per_page", "30").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeaders).
 		File("testdata/branches.json")
 
 	client := NewDefault()
@@ -171,8 +164,6 @@ func TestGitListTags(t *testing.T) {
 		MatchParam("per_page", "30").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeaders).
 		File("testdata/tags.json")
 
 	client := NewDefault()
@@ -199,7 +190,6 @@ func TestGitListChanges(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/repository/commits/dc238bca5c226bb7a2c7cc5bdbfc9930d6abd8b6/diff").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/commit_diff.json")
 
 	client := NewDefault()
@@ -229,7 +219,6 @@ func TestGitCompareCommits(t *testing.T) {
 		MatchParam("to", "652a91b8").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/compare.json")
 
 	client := NewDefault()
@@ -259,7 +248,6 @@ func TestGitCreateRef(t *testing.T) {
 		MatchParam("ref", baseSHA).
 		Reply(http.StatusCreated).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/create_branch.json")
 
 	client := NewDefault()

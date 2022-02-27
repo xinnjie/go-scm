@@ -27,7 +27,6 @@ func TestRepositoryCreate(t *testing.T) {
 		MatchParam("search", "diaspora").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/find_namespace.json")
 
 	gock.New("https://git.code.tencent.com").
@@ -35,7 +34,6 @@ func TestRepositoryCreate(t *testing.T) {
 		File("testdata/create_project.json").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/repo.json")
 
 	client := NewDefault()
@@ -70,7 +68,6 @@ func TestRepositoryFork(t *testing.T) {
 		File("testdata/fork_project.json").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/repo.json")
 
 	client := NewDefault()
@@ -102,7 +99,6 @@ func TestRepositoryFind(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/repo.json")
 
 	client := NewDefault()
@@ -130,7 +126,6 @@ func TestRepositoryPerms(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/repo.json")
 
 	client := NewDefault()
@@ -159,7 +154,6 @@ func TestRepositoryNotFound(t *testing.T) {
 		Get("/api/v3/projects/dev/null").
 		Reply(404).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		BodyString(`{"message":"404 Project Not Found"}`)
 
 	client := NewDefault()
@@ -183,8 +177,6 @@ func TestRepositoryList(t *testing.T) {
 		MatchParam("membership", "true").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeaders).
 		File("testdata/repos.json")
 
 	client := NewDefault()
@@ -214,7 +206,6 @@ func TestAddCollaborator(t *testing.T) {
 		MatchParam("search", "john_smith").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/user_search.json")
 
 	gock.New("https://git.code.tencent.com").
@@ -222,7 +213,6 @@ func TestAddCollaborator(t *testing.T) {
 		File("testdata/add_collaborator.json").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/add_collaborator_user.json")
 
 	client := NewDefault()
@@ -241,8 +231,6 @@ func TestListContributor(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/members/all").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeaders).
 		File("testdata/contributors.json")
 
 	client := NewDefault()
@@ -273,8 +261,6 @@ func TestStatusList(t *testing.T) {
 		MatchParam("per_page", "30").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeaders).
 		File("testdata/statuses.json")
 
 	client := NewDefault()
@@ -304,8 +290,6 @@ func TestCombinedStatus(t *testing.T) {
 		MatchParam("page", "1").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeadersNoPagination).
 		File("testdata/statuses.json")
 
 	client := NewDefault()
@@ -333,7 +317,6 @@ func TestStatusCreate(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/repo.json")
 
 	gock.New("https://git.code.tencent.com").
@@ -343,7 +326,6 @@ func TestStatusCreate(t *testing.T) {
 		MatchParam("target_url", "https://ci.example.com/xinnjie/testme/42").
 		Reply(201).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/status.json")
 
 	in := &scm.StatusInput{
@@ -378,7 +360,6 @@ func TestRepositoryHookFind(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/hooks/1").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/hook.json")
 
 	client := NewDefault()
@@ -408,8 +389,6 @@ func TestRepositoryHookList(t *testing.T) {
 		MatchParam("per_page", "30").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeaders).
 		File("testdata/hooks.json")
 
 	client := NewDefault()
@@ -437,8 +416,7 @@ func TestRepositoryHookDelete(t *testing.T) {
 	gock.New("https://git.code.tencent.com").
 		Delete("/api/v3/projects/xinnjie/testme/hooks/1").
 		Reply(204).
-		Type("application/json").
-		SetHeaders(mockHeaders)
+		Type("application/json")
 
 	client := NewDefault()
 	res, err := client.Repositories.DeleteHook(context.Background(), "xinnjie/testme", "1")
@@ -463,7 +441,6 @@ func TestRepositoryHookCreate(t *testing.T) {
 		MatchParam("url", "https://ci.example.com/hook").
 		Reply(201).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/hook.json")
 
 	in := &scm.HookInput{
@@ -498,7 +475,6 @@ func TestRepositoryHookUpdate(t *testing.T) {
 		Put("/api/v3/projects/xinnjie/testme/hooks/1").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/hook.json")
 
 	in := &scm.HookInput{
@@ -532,7 +508,6 @@ func TestRepositoryFindUserPermission(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/members/all").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/contributors.json")
 
 	client := NewDefault()

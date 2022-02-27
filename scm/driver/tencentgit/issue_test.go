@@ -23,7 +23,6 @@ func TestIssueFind(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/issues/1").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/issue.json")
 
 	client := NewDefault()
@@ -51,7 +50,6 @@ func TestIssueCommentFind(t *testing.T) {
 		Get("/api/v3/projects/xinnjie/testme/issues/2/notes/1").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/issue_note.json")
 
 	client := NewDefault()
@@ -81,8 +79,6 @@ func TestIssueList(t *testing.T) {
 		MatchParam("per_page", "30").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeaders).
 		File("testdata/issues.json")
 
 	client := NewDefault()
@@ -113,8 +109,6 @@ func TestIssueListComments(t *testing.T) {
 		MatchParam("per_page", "30").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeaders).
 		File("testdata/issue_notes.json")
 
 	client := NewDefault()
@@ -145,8 +139,6 @@ func TestIssueListEvents(t *testing.T) {
 		MatchParam("per_page", "30").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
-		SetHeaders(mockPageHeaders).
 		File("testdata/issue_events.json")
 
 	client := NewDefault()
@@ -178,7 +170,6 @@ func TestIssueCreate(t *testing.T) {
 		Post("/api/v3/projects/xinnjie/testme/issues").
 		Reply(200).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/issue.json")
 
 	input := scm.IssueInput{
@@ -212,7 +203,6 @@ func TestIssueCreateComment(t *testing.T) {
 		MatchParam("body", "lgtm").
 		Reply(201).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/issue_note.json")
 
 	input := &scm.CommentInput{
@@ -243,9 +233,7 @@ func TestIssueCommentDelete(t *testing.T) {
 	gock.New("https://git.code.tencent.com").
 		Delete("/api/v3/projects/xinnjie/testme/issues/2/notes/1").
 		Reply(204).
-		Type("application/json").
-		SetHeaders(mockHeaders)
-
+		Type("application/json")
 	client := NewDefault()
 	_, err := client.Issues.DeleteComment(context.Background(), "xinnjie/testme", 2, 1)
 	if err != nil {
@@ -263,7 +251,6 @@ func TestIssueEditComment(t *testing.T) {
 		File("testdata/edit_issue_note.json").
 		Reply(201).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/issue_note.json")
 
 	input := &scm.CommentInput{
@@ -295,8 +282,7 @@ func TestIssueClose(t *testing.T) {
 		Put("/api/v3/projects/xinnjie/testme/issues/1").
 		MatchParam("state_event", "close").
 		Reply(204).
-		Type("application/json").
-		SetHeaders(mockHeaders)
+		Type("application/json")
 
 	client := NewDefault()
 	_, err := client.Issues.Close(context.Background(), "xinnjie/testme", 1)
@@ -314,9 +300,7 @@ func TestIssueReopen(t *testing.T) {
 		Put("/api/v3/projects/xinnjie/testme/issues/1").
 		MatchParam("state_event", "reopen").
 		Reply(204).
-		Type("application/json").
-		SetHeaders(mockHeaders)
-
+		Type("application/json")
 	client := NewDefault()
 	_, err := client.Issues.Reopen(context.Background(), "xinnjie/testme", 1)
 	if err != nil {
@@ -333,9 +317,7 @@ func TestIssueLock(t *testing.T) {
 		Put("/api/v3/projects/xinnjie/testme/issues/1").
 		MatchParam("discussion_locked", "true").
 		Reply(204).
-		Type("application/json").
-		SetHeaders(mockHeaders)
-
+		Type("application/json")
 	client := NewDefault()
 	_, err := client.Issues.Lock(context.Background(), "xinnjie/testme", 1)
 	if err != nil {
@@ -352,9 +334,7 @@ func TestIssueUnlock(t *testing.T) {
 		Put("/api/v3/projects/xinnjie/testme/issues/1").
 		MatchParam("discussion_locked", "false").
 		Reply(204).
-		Type("application/json").
-		SetHeaders(mockHeaders)
-
+		Type("application/json")
 	client := NewDefault()
 	_, err := client.Issues.Unlock(context.Background(), "xinnjie/testme", 1)
 	if err != nil {
@@ -372,7 +352,6 @@ func TestIssueSetMilestone(t *testing.T) {
 		File("testdata/issue_or_pr_set_milestone.json").
 		Reply(201).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/issue.json")
 
 	client := NewDefault()
@@ -390,7 +369,6 @@ func TestIssueClearMilestone(t *testing.T) {
 		File("testdata/issue_or_pr_clear_milestone.json").
 		Reply(201).
 		Type("application/json").
-		SetHeaders(mockHeaders).
 		File("testdata/issue.json")
 
 	client := NewDefault()
