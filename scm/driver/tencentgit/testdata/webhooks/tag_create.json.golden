@@ -1,0 +1,43 @@
+{
+    "Ref": "refs/tags/v1.0.2",
+    "After": "b96850262fabfa9a1d9d28fff9040621958379f9",
+    "Repo": {
+        "ID": "11452",
+        "Namespace": "z-413",
+        "Name": "tencent",
+        "FullName": "z-413/tencent",
+        "Perm": null,
+        "Branch": "",
+        "Private": false,
+        "Clone": "http://tencent.com/z-413/tencent.git",
+        "CloneSSH": "git@tencent.com:z-413/tencent.git",
+        "Link": "https://tencent.com/z-413/tencent",
+        "Created": "0001-01-01T00:00:00Z",
+        "Updated": "0001-01-01T00:00:00Z"
+    },
+    "Commit": {
+        "Sha": "458ce39e1a28572597979ca6c7cdc6c338f6bd43",
+        "Message": "update",
+        "Author": {
+            "Name": "xuhaohe",
+            "Email": "xuhaohe@tencent.com",
+            "Date": "0001-01-01T00:00:00Z",
+            "Login": "xuhaohe",
+            "Avatar": ""
+        },
+        "Committer": {
+            "Name": "git_user1",
+            "Email": "",
+            "Date": "0001-01-01T00:00:00Z",
+            "Login": "git_user1",
+            "Avatar": ""
+        },
+        "Link": "https://git.example.tencent.com/release-test/xxx-framework/commit/458ce39e1a28572597979ca6c7cdc6c338f6bd43"
+    },
+    "Sender": {
+        "Login": "git_user1",
+        "Name": "git_user1",
+        "Email": "",
+        "Avatar": ""
+    }
+}

@@ -1,0 +1,89 @@
+{
+  "Action": "created",
+  "Repo": {
+    "ID": "229",
+    "Namespace": "z-413",
+    "Name": "rename",
+    "FullName": "z-413/rename",
+    "Perm": null,
+    "Branch": "",
+    "Private": false,
+    "Clone": "https://tencent.com/z-413/rename.git",
+    "CloneSSH": "",
+    "Link": "https://tencent.com/z-413/rename",
+    "Created": "0001-01-01T00:00:00Z",
+    "Updated": "0001-01-01T00:00:00Z"
+  },
+  "PullRequest": {
+    "Number": 3,
+    "Title": "xx",
+    "Body": "Revision, not careful.",
+    "State": "open",
+    "Sha": "1480a4610ca01dd10cb5bc30d8a1b1eab98c09a1",
+    "Ref": "refs/merge-requests/3/head",
+    "Source": "master",
+    "Target": "fenzhi01",
+    "Base": {
+      "Ref": "fenzhi01",
+      "Repo": {
+        "ID": "14",
+        "Namespace": "z-413",
+        "Name": "rename",
+        "FullName": "z-413/rename",
+        "Branch": "",
+        "Private": false,
+        "Clone": "http://tencent.com:z-413/rename.git",
+        "CloneSSH": "git@tencent.com:z-413/rename.git",
+        "Link": "https://tencent.com:z-413/rename"
+      }
+    },
+    "Head": {
+      "Ref": "master",
+      "Sha": "1480a4610ca01dd10cb5bc30d8a1b1eab98c09a1",
+      "Repo": {
+        "ID": "14",
+        "Namespace": "z-413",
+        "Name": "rename",
+        "FullName": "z-413/rename",
+        "Branch": "",
+        "Private": false,
+        "Clone": "http://tencent.com:z-413/rename.git",
+        "CloneSSH": "git@tencent.com:z-413/rename.git",
+        "Link": "https://tencent.com:z-413/rename"
+      }
+    },
+    "Fork": "z-413/rename",
+    "Link": "",
+    "Closed": false,
+    "Merged": false,
+    "Author": {
+      "ID": 11322,
+      "Login": "mr_user",
+      "Name": "mr_user",
+      "Email": "",
+      "Avatar": "https://blog.bobo.com.cn/s/blog_6e572cd60101qls0.html"
+    },
+    "Created": "2015-03-13T09:52:25Z",
+    "Updated": "2015-03-13T09:52:25Z"
+  },
+  "Comment": {
+    "ID": 294,
+    "Author": {
+      "ID": 29,
+      "Login": "git_user2",
+      "Name": "git_user2",
+      "Email": "",
+      "Avatar": "https://blog.bobo.com.cn/s/blog_6e572cd60101qls0.html"
+    },
+    "Body": "back",
+    "Created": "2015-03-13T09:52:25Z",
+    "Updated": "2015-03-13T09:52:25Z"
+  },
+  "Sender": {
+    "ID": 29,
+    "Login": "git_user2",
+    "Name": "git_user2",
+    "Email": "",
+    "Avatar": "https://blog.bobo.com.cn/s/blog_6e572cd60101qls0.html"
+  }
+}

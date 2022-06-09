@@ -1,0 +1,46 @@
+{
+  "object_kind": "note",
+  "user": {
+    "name": "git_user2",
+    "username": "git_user2",
+    "avatar_url": "https://blog.bobo.com.cn/s/blog_6e572cd60101qls0.html"
+  },
+  "project_id": 229,
+  "repository": {
+    "name": "rename",
+    "url": "https://tencent.com:z-413/rename.git",
+    "description": "is usually",
+    "homepage": "https://tencent.com:z-413/rename"
+  },
+  "object_attributes": {
+    "id": 1239,
+    "note": "bug",
+    "noteable_type": "Issue",
+    "author_id": 23,
+    "created_at": "2018-03-13T09:51:06+0000",
+    "updated_at": "2018-03-13T09:51:06+0000",
+    "project_id": 229,
+    "attachment": null,
+    "line_code": null,
+    "commit_id": "",
+    "noteable_id": 23,
+    "system": false,
+    "st_diff": null,
+    "url": "https://tencent.com:z-413/rename/issues/23##note_229"
+  },
+  "issue": {
+    "id": 8,
+    "title": "test",
+    "assignee_id": null,
+    "author_id": 11323,
+    "project_id": 229,
+    "created_at": "2018-03-13T09:51:06+0000",
+    "updated_at": "2018-03-13T09:51:06+0000",
+    "position": 0,
+    "branch_name": null,
+    "description": "test",
+    "milestone_id": null,
+    "state": "closed",
+    "iid": 66
+  }
+}

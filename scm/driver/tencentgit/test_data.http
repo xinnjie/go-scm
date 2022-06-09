@@ -1,0 +1,57 @@
+GET  https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/repository/commits/dc238bca5c226bb7a2c7cc5bdbfc9930d6abd8b6
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+
+###
+GET  https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/repository/branches/master
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+
+###
+GET  https://git.code.tencent.com/api/v3/user
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+
+###
+GET  https://git.code.tencent.com/api/v3/users?search=xinnjie&page=1
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+
+
+### 查询pr
+GET  https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_requests?page=1&per_page=1
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+
+
+### 修改标签
+PUT https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_request/341756
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+Content-Type: application/json
+
+{
+  "labels": "versions"
+}
+
+### 修改asisnee
+PUT https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_request/341756
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+Content-Type: application/json
+
+{
+  "assignee_id": 0
+}
+
+
+### 查询pr
+GET https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_request/iid/1
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+
+### 创建评论
+POST https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_requests/341756/notes
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ
+Content-Type: application/json
+
+{
+  "body": "lgtm"
+}
+
+
+### 查询评论
+GET https://git.code.tencent.com/api/v3/projects/xinnjie%2Ftestme/merge_requests/341756/notes?page=1&per_page=3
+PRIVATE-TOKEN: 7hlVH18EYAix5a_U1pCQ

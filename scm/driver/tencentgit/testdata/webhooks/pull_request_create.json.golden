@@ -1,0 +1,80 @@
+{
+  "Action": "opened",
+  "Repo": {
+    "ID": "14",
+    "Namespace": "z-413",
+    "Name": "rename",
+    "FullName": "z-413/rename",
+    "Perm": null,
+    "Branch": "",
+    "Private": false,
+    "Clone": "http://tencent.com/z-413/rename.git",
+    "CloneSSH": "ssh://git@tencent.com/z-413/rename.git",
+    "Link": "https://tencent.com/z-413/rename",
+    "Created": "0001-01-01T00:00:00Z",
+    "Updated": "0001-01-01T00:00:00Z"
+  },
+  "PullRequest": {
+    "Number": 1,
+    "Title": "agree",
+    "Body": "description",
+    "State": "open",
+    "Sha": "1480a4610ca01dd10cb5bc30d83151eab98c09a1",
+    "Ref": "refs/merge-requests/1/head",
+    "Base": {
+      "Ref": "master",
+      "Repo": {
+        "ID": "14",
+        "Namespace": "z-413",
+        "Name": "rename",
+        "FullName": "z-413/rename",
+        "Perm": null,
+        "Branch": "",
+        "Private": false,
+        "Clone": "http://tencent.com/z-413/rename.git",
+        "CloneSSH": "ssh://git@tencent.com/z-413/rename.git",
+        "Link": "https://tencent.com/z-413/rename",
+        "Created": "0001-01-01T00:00:00Z",
+        "Updated": "0001-01-01T00:00:00Z"
+      }
+    },
+    "Head": {
+      "Ref": "fenzhi01",
+      "Sha": "1480a4610ca01dd10cb5bc30d83151eab98c09a1",
+      "Repo": {
+        "ID": "2",
+        "Namespace": "z-413",
+        "Name": "rename",
+        "FullName": "z-413/rename",
+        "Perm": null,
+        "Branch": "",
+        "Private": false,
+        "Clone": "http://tencent.com/z-413/rename.git",
+        "CloneSSH": "ssh://git@tencent.com/z-413/rename.git",
+        "Link": "https://tencent.com/z-413/rename",
+        "Created": "0001-01-01T00:00:00Z",
+        "Updated": "0001-01-01T00:00:00Z"
+      }
+    },
+    "Source": "fenzhi01",
+    "Target": "master",
+    "Fork": "z-413/rename",
+    "Link": "https://tencent.com/rename/merge_requests/1",
+    "Closed": false,
+    "Merged": false,
+    "Author": {
+      "Login": "git_user2",
+      "Name": "git_user2",
+      "Email": "",
+      "Avatar": "https://blog.bobo.com.cn/s/blog_6e572cd60101qls0.html"
+    },
+    "Created": "2018-03-13T09:51:06Z",
+    "Updated": "2018-03-13T09:51:06Z"
+  },
+  "Sender": {
+    "Login": "git_user2",
+    "Name": "git_user2",
+    "Email": "",
+    "Avatar": "https://blog.bobo.com.cn/s/blog_6e572cd60101qls0.html"
+  }
+}

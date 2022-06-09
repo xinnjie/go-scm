@@ -1,0 +1,53 @@
+{
+  "Action": "created",
+  "Repo": {
+    "ID": "229",
+    "Namespace": "z-413",
+    "Name": "rename",
+    "FullName": "z-413/rename",
+    "Perm": null,
+    "Branch": "",
+    "Private": false,
+    "Clone": "https://tencent.com:z-413/rename.git",
+    "CloneSSH": "",
+    "Link": "https://tencent.com:z-413/rename",
+    "Created": "0001-01-01T00:00:00Z",
+    "Updated": "0001-01-01T00:00:00Z"
+  },
+  "Issue": {
+    "Number": 66,
+    "Title": "test",
+    "Body": "test",
+    "Closed": true,
+    "Author": {
+      "ID": 11323,
+      "Login": "issue_user",
+      "Name": "issue_user",
+      "Email": "",
+      "Avatar": "https://blog.bobo.com.cn/s/blog_6e572cd60101qls0.html"
+    },
+    "PullRequest": false,
+    "Created": "2018-03-13T09:51:06Z",
+    "Updated": "2018-03-13T09:51:06Z"
+  },
+  "Comment": {
+    "ID": 1239,
+    "Author": {
+      "ID": 23,
+      "Login": "git_user2",
+      "Name": "git_user2",
+      "Email": "",
+      "Avatar": "https://blog.bobo.com.cn/s/blog_6e572cd60101qls0.html"
+    },
+    "Body": "bug",
+    "Created": "2018-03-13T09:51:06Z",
+    "Updated": "2018-03-13T09:51:06Z"
+  },
+  "Sender": {
+    "ID": 23,
+    "Login": "git_user2",
+    "Name": "git_user2",
+    "Email": "",
+    "Avatar": "https://blog.bobo.com.cn/s/blog_6e572cd60101qls0.html"
+  }
+}

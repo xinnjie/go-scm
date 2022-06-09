@@ -3,6 +3,7 @@ package factory
 import (
 	"context"
 	"fmt"
+	"github.com/jenkins-x/go-scm/scm/driver/tencentgit"
 	"net/http"
 	"net/url"
 	"os"
@@ -125,6 +126,8 @@ func newClient(driver, serverURL string, authOptions *AuthOptions, opts ...Clien
 			return nil, ErrMissingGitServerURL
 		}
 		client, err = stash.New(serverURL)
+	case "tencentgit":
+		client, err = tencentgit.New(serverURL)
 	default:
 		return nil, fmt.Errorf("Unsupported $GIT_KIND value: %s", driver)
 	}

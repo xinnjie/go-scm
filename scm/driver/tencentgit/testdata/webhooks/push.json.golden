@@ -1,0 +1,43 @@
+{
+    "Ref": "refs/heads/master",
+    "After": "e99db09904cfa385a129305e7660395f161950a",
+    "Repo": {
+        "ID": "165245",
+        "Namespace": "test",
+        "Name": "z-test",
+        "FullName": "test/z-test",
+        "Perm": null,
+        "Branch": "",
+        "Private": false,
+        "Clone": "http://tencent.com/test/z-test.git",
+        "CloneSSH": "git@tencent.com:test/z-test.git",
+        "Link": "https://tencent.com/test/z-test",
+        "Created": "0001-01-01T00:00:00Z",
+        "Updated": "0001-01-01T00:00:00Z"
+    },
+    "Commit": {
+        "Sha": "1480a4610ca01dd10cb5bc30d8a1b1ea568c09a1",
+        "Message": "update readme",
+        "Author": {
+            "Name": "Bob",
+            "Email": "Bob@tencent.com",
+            "Date": "0001-01-01T00:00:00Z",
+            "Login": "Bob",
+            "Avatar": ""
+        },
+        "Committer": {
+            "Name": "git_user1",
+            "Email": "git_user1@tencent.com",
+            "Date": "0001-01-01T00:00:00Z",
+            "Login": "git_user1",
+            "Avatar": ""
+        },
+        "Link": "https://tencent.com/test/z-test/commit/b96850262fabfa9a8a9d28fff9040621958379f9"
+    },
+    "Sender": {
+        "Login": "git_user1",
+        "Name": "git_user1",
+        "Email": "git_user1@tencent.com",
+        "Avatar": ""
+    }
+}

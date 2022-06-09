@@ -1,0 +1,18 @@
+{
+    "ID": "179129",
+    "Namespace": "xinnjie",
+    "Name": "testme",
+    "FullName": "xinnjie/testme",
+    "Perm": {
+        "Pull": true,
+        "Push": false,
+        "Admin": false
+    },
+    "Branch": "master",
+    "Private": false,
+    "Clone": "https://git.code.tencent.com/xinnjie/testme.git",
+    "CloneSSH": "git@git.code.tencent.com:xinnjie/testme.git",
+    "Link": "https://git.code.tencent.com/xinnjie/testme",
+    "Created": "2021-08-20T10:44:47Z",
+    "Updated": "0001-01-01T00:00:00Z"
+}

@@ -1,0 +1,16 @@
+[
+    {
+        "old_path": "/dev/null",
+        "new_path": "README.md",
+        "a_mode": 0,
+        "b_mode": 33188,
+        "diff": "@@ -0,0 +1,2 @@\n+# testme\r\n+a repo for tencentgit client integration test\n\\ No newline at end of file\n",
+        "new_file": true,
+        "renamed_file": false,
+        "deleted_file": false,
+        "is_too_large": false,
+        "is_collapse": false,
+        "additions": 2,
+        "deletions": 0
+    }
+]

@@ -1,0 +1,16 @@
+{
+  "id": "6269835cafdd89e6d8b8d4a4e3738c79206c1d06",
+  "message": "推送新内容",
+  "parent_ids": [
+    "11a63fa022906668338166ce7f2e7bf35d502285"
+  ],
+  "authored_date": "2012-06-07T07:38:33+0000",
+  "author_name": "git_user1",
+  "author_email": "git_user1@tencent.com",
+  "committed_date": "2012-06-07T07:38:33+0000",
+  "committer_name": "git_user1",
+  "committer_email": "git_user1@tencent.com",
+  "title": "推送新内容",
+  "created_at": "2012-06-07T07:38:33+0000",
+  "short_id": "6269835c"
+}

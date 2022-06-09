@@ -1,0 +1,32 @@
+{
+  "id": 176405,
+  "email": "wx_1600e990b7cb469a97087b334c94acee@git.code.tencent.com",
+  "name": "xinnjie",
+  "username": "xinnjie",
+  "web_url": "https://git.code.tencent.com/u/xinnjie",
+  "current_sign_in_at": "2022-02-22T15:42:06+0000",
+  "is_admin": false,
+  "projects_limit": 9999,
+  "skype": null,
+  "linkedin": null,
+  "twitter": null,
+  "theme_id": 1,
+  "bio": null,
+  "state": "active",
+  "color_scheme_id": 4,
+  "website_url": null,
+  "created_at": "2021-08-12T12:16:46+0000",
+  "identities": [
+    {
+      "extern_uid": "o2tOe0ek5eer_Z8s0Y-lkZGi_C78",
+      "provider": "wechat_open_wx308f65d74dca84e2"
+    },
+    {
+      "extern_uid": "o2tOe0ek5eer_Z8s0Y-lkZGi_C78",
+      "provider": "wechat_mp_wxae833cca19422851"
+    }
+  ],
+  "private_token": "ABCDE",
+  "can_create_project": true,
+  "avatar_url": "https://git.code.tencent.com/uploads/user/avatar/176405/7e72ab97e19e430287c34c54af3bf7e1."
+}

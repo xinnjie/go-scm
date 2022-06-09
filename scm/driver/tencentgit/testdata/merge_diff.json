@@ -1,0 +1,57 @@
+{
+  "labels": [],
+  "id": 339869,
+  "title": "edit README",
+  "target_project_id": 179129,
+  "target_branch": "master",
+  "source_project_id": 179129,
+  "source_branch": "mr-test",
+  "state": "merged",
+  "merge_status": "can_be_merged",
+  "iid": 1,
+  "description": "edit README",
+  "created_at": "2021-08-22T16:22:38+0000",
+  "updated_at": "2021-08-22T16:29:28+0000",
+  "resolved_at": "2021-08-22T16:29:28+0000",
+  "merge_type": "SquashAndMerge",
+  "assignee": {
+    "id": 176405,
+    "username": "xinnjie",
+    "web_url": "https://git.code.tencent.com/u/xinnjie",
+    "name": "xinnjie",
+    "state": "active",
+    "avatar_url": "https://git.code.tencent.com/uploads/user/avatar/176405/7e72ab97e19e430287c34c54af3bf7e1."
+  },
+  "author": {
+    "id": 176405,
+    "username": "xinnjie",
+    "web_url": "https://git.code.tencent.com/u/xinnjie",
+    "name": "xinnjie",
+    "state": "active",
+    "avatar_url": "https://git.code.tencent.com/uploads/user/avatar/176405/7e72ab97e19e430287c34c54af3bf7e1."
+  },
+  "merge_commit_sha": "a398282a168e6919e8ff3806e1fa11f66ab53d30",
+  "milestone": null,
+  "necessary_reviewers": null,
+  "suggestion_reviewers": null,
+  "files": [
+    {
+      "old_path": "README.md",
+      "new_path": "README.md",
+      "a_mode": 33188,
+      "b_mode": 33188,
+      "diff": "@@ -1,2 +1,5 @@\n # testme\r\n-a repo for tencentgit client integration test\n\\ No newline at end of file\n+a repo for tencentgit client integration test\r\n+\r\n+# changelog\r\n+first mr\n\\ No newline at end of file\n",
+      "new_file": false,
+      "renamed_file": false,
+      "deleted_file": false,
+      "is_too_large": false,
+      "is_collapse": false,
+      "additions": 4,
+      "deletions": 1
+    }
+  ],
+  "project_id": 179129,
+  "work_in_progress": false,
+  "upvotes": 0,
+  "downvotes": 0
+}
